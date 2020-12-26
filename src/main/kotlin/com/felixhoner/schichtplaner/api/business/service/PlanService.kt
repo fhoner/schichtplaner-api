@@ -1,7 +1,7 @@
-package com.felixhoner.schichtplaner.api.service
+package com.felixhoner.schichtplaner.api.business.service
 
 import com.felixhoner.schichtplaner.api.persistence.repository.PlanRepository
-import com.felixhoner.schichtplaner.api.service.model.Plan
+import com.felixhoner.schichtplaner.api.business.model.Plan
 import org.springframework.stereotype.Component
 
 @Component

@@ -1,7 +1,7 @@
-package com.felixhoner.schichtplaner.api.service
+package com.felixhoner.schichtplaner.api.business.service
 
 import com.felixhoner.schichtplaner.api.persistence.entity.*
-import com.felixhoner.schichtplaner.api.service.model.*
+import com.felixhoner.schichtplaner.api.business.model.*
 import org.springframework.stereotype.Component
 
 @Component
@@ -20,7 +20,7 @@ class TransformerBo {
 	)
 
 	fun toBo(shift: ShiftEntity) = Shift(
-		id = shift.id,
+		id = shift.id!!,
 		uuid = shift.uuid,
 		startTime = shift.startTime,
 		endTime = shift.endTime

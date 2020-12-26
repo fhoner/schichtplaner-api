@@ -1,7 +1,7 @@
-package com.felixhoner.schichtplaner.api.service
+package com.felixhoner.schichtplaner.api.business.service
 
 import com.felixhoner.schichtplaner.api.persistence.repository.ShiftRepository
-import com.felixhoner.schichtplaner.api.service.model.Shift
+import com.felixhoner.schichtplaner.api.business.model.Shift
 import org.springframework.stereotype.Component
 
 @Component

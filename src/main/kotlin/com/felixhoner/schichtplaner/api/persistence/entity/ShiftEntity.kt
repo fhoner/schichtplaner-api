@@ -9,13 +9,6 @@ import javax.validation.constraints.NotNull
 @Table(name = "shift")
 class ShiftEntity(
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	val id: Long,
-
-	@Column(unique = true)
-	val uuid: UUID,
-
 	@NotNull
 	val startTime: LocalTime,
 
@@ -24,8 +17,17 @@ class ShiftEntity(
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
 	val production: ProductionEntity,
+) {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	val id: Long? = null
+
+	@Column(unique = true)
+	val uuid: UUID = UUID.randomUUID()
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "shift_worker")
 	val workers: MutableList<WorkerEntity> = mutableListOf()
-)
+
+}

@@ -28,6 +28,15 @@ dependencies {
 	implementation("org.hibernate.validator:hibernate-validator:6.1.7.Final")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("io.kotest:kotest-assertions-core-jvm:4.3.2")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:postgresql")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.testcontainers:testcontainers-bom:1.15.1")
+	}
 }
 
 tasks.withType<KotlinCompile> {

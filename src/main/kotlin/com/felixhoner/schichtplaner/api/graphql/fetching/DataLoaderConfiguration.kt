@@ -2,8 +2,8 @@ package com.felixhoner.schichtplaner.api.graphql.fetching
 
 import com.expediagroup.graphql.spring.execution.DataLoaderRegistryFactory
 import com.felixhoner.schichtplaner.api.graphql.dto.*
-import com.felixhoner.schichtplaner.api.service.ProductionService
-import com.felixhoner.schichtplaner.api.service.ShiftService
+import com.felixhoner.schichtplaner.api.business.service.ProductionService
+import com.felixhoner.schichtplaner.api.business.service.ShiftService
 import org.dataloader.DataLoader
 import org.dataloader.DataLoaderRegistry
 import org.springframework.context.annotation.Bean

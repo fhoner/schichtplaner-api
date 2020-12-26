@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
-import com.felixhoner.schichtplaner.api.service.model.*
+import com.felixhoner.schichtplaner.api.business.model.*
 import org.springframework.stereotype.Component
 
 @Component

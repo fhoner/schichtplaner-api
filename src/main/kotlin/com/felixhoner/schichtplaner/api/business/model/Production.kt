@@ -1,4 +1,4 @@
-package com.felixhoner.schichtplaner.api.service.model
+package com.felixhoner.schichtplaner.api.business.model
 
 import java.util.*
 

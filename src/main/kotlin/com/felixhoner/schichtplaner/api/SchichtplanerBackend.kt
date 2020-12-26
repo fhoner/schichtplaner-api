@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
-class DemoApplication {
+class SchichtplanerBackend {
 
 	@Bean
 	fun dataFetcherFactoryProvider(
@@ -21,5 +21,5 @@ class DemoApplication {
 }
 
 fun main(args: Array<String>) {
-	runApplication<DemoApplication>(*args)
+	runApplication<SchichtplanerBackend>(*args)
 }
