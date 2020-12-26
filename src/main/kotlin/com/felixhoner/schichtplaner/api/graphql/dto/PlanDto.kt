@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope
 @Scope("prototype")
 data class PlanDto(
 	@GraphQLIgnore val id: Long,
-	@GraphQLName("id") val uuid: String,
+	val uuid: String,
 	val name: String
 ) {
 	@JsonIgnore

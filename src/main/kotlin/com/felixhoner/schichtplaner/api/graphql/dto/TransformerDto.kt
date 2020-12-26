@@ -1,7 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
-import com.felixhoner.schichtplaner.api.service.model.Plan
-import com.felixhoner.schichtplaner.api.service.model.Production
+import com.felixhoner.schichtplaner.api.service.model.*
 import org.springframework.stereotype.Component
 
 @Component
@@ -17,6 +16,13 @@ class TransformerDto {
 		id = production.id,
 		uuid = production.uuid.toString(),
 		name = production.name
+	)
+
+	fun toDto(shift: Shift) = ShiftDto(
+		id = shift.id,
+		uuid = shift.uuid.toString(),
+		startTime = shift.startTime.toString(),
+		endTime = shift.endTime.toString()
 	)
 
 }

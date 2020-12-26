@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 @Scope("prototype")
 data class ProductionDto @Autowired(required = false) constructor(
 	@GraphQLIgnore val id: Long,
-	@GraphQLName("id") val uuid: String,
+	val uuid: String,
 	val name: String
 ) {
 
