@@ -1,24 +1,27 @@
-package com.felixhoner.schichtplaner.api.persistence.repository
+package com.felixhoner.schichtplaner.api
 
 import com.felixhoner.schichtplaner.api.persistence.entity.*
-import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotest.matchers.collections.shouldHaveSize
+import com.felixhoner.schichtplaner.api.persistence.repository.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.LocalTime
-import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
 @ExtendWith(SpringExtension::class)
-@Transactional
-class ShiftRepositoryTest {
+@Testcontainers
+class GraphQLSysTest {
 
 	@Autowired
 	lateinit var planRepository: PlanRepository
@@ -29,8 +32,39 @@ class ShiftRepositoryTest {
 	@Autowired
 	lateinit var shiftRepository: ShiftRepository
 
+	@Autowired
+	lateinit var testClient: WebTestClient
+
 	@Test
-	fun `should find by plans`() {
+	fun `should return correct json`() {
+		insertData()
+		val query = """
+			query {
+			  getPlans {
+				name
+				productions {
+				  name
+				  shifts {
+					startTime
+					endTime
+				  }
+				}
+			  }
+			}
+		"""
+			.replace("\n", "")
+			.replace("\t", " ")
+			.replace(" +".toRegex(), " ")
+
+		testClient.post()
+			.uri(GRAPHQL_ENDPOINT)
+			.accept(APPLICATION_JSON)
+			.contentType(GRAPHQL_MEDIA_TYPE)
+			.bodyValue(query)
+			.exchange()
+	}
+
+	fun insertData() {
 		val konzert = PlanEntity("Konzert 2021")
 		val vtf = PlanEntity("Vatertagsfest 2021")
 		val kabarett = PlanEntity("Kabarett 2021")
@@ -56,11 +90,6 @@ class ShiftRepositoryTest {
 				vtfFriesShift2, vtfFriesShift3
 			)
 		)
-
-		val queried = listOf(konzertEntranceShift, vtfDrinksShift1, vtfDrinksShift2, vtfDrinksShift3)
-		val result = shiftRepository.findAllByProductionIds(queried.map { it.production.id!! })
-		result shouldHaveSize 4
-		result.map { Pair(it.startTime, it.endTime) } shouldContainExactlyInAnyOrder queried.map { Pair(it.startTime, it.endTime) }
 	}
 
 	companion object {
@@ -75,5 +104,4 @@ class ShiftRepositoryTest {
 			registry.add("spring.datasource.username", container::getUsername);
 		}
 	}
-
 }

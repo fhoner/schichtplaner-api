@@ -22,6 +22,6 @@ data class ProductionEntity(
 	@Column(unique = true)
 	val uuid: UUID = UUID.randomUUID()
 
-	@OneToMany(mappedBy = "production", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+	@OneToMany(mappedBy = "production", fetch = FetchType.LAZY)
 	val shifts: MutableList<ShiftEntity> = mutableListOf()
 }

@@ -1,8 +1,8 @@
-package com.felixhoner.schichtplaner.api.graphql.fetching
+package com.felixhoner.schichtplaner.api.graphql.query
 
 import com.expediagroup.graphql.spring.operations.Query
-import com.felixhoner.schichtplaner.api.graphql.dto.*
 import com.felixhoner.schichtplaner.api.business.service.PlanService
+import com.felixhoner.schichtplaner.api.graphql.dto.*
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.beans.factory.BeanFactory

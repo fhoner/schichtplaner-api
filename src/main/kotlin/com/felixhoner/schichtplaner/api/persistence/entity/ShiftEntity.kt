@@ -15,7 +15,7 @@ class ShiftEntity(
 	@NotNull
 	val endTime: LocalTime,
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+	@ManyToOne(fetch = FetchType.LAZY)
 	val production: ProductionEntity,
 ) {
 

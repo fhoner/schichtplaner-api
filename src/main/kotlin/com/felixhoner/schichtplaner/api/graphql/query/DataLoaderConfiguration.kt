@@ -1,4 +1,4 @@
-package com.felixhoner.schichtplaner.api.graphql.fetching
+package com.felixhoner.schichtplaner.api.graphql.query
 
 import com.expediagroup.graphql.spring.execution.DataLoaderRegistryFactory
 import com.felixhoner.schichtplaner.api.graphql.dto.*
