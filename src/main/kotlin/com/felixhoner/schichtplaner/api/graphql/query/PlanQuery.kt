@@ -58,3 +58,21 @@ class ShiftsDataFetcher: DataFetcher<CompletableFuture<List<ShiftDto>>>, BeanFac
 			.load(productionId)
 	}
 }
+
+@Component("[WorkerDto!]DataFetcher")
+@Scope("prototype")
+class WorkersDataFetcher: DataFetcher<CompletableFuture<List<WorkerDto>>>, BeanFactoryAware {
+
+	private lateinit var beanFactory: BeanFactory
+
+	override fun setBeanFactory(beanFactory: BeanFactory) {
+		this.beanFactory = beanFactory
+	}
+
+	override fun get(environment: DataFetchingEnvironment): CompletableFuture<List<WorkerDto>> {
+		val productionId = environment.getSource<ShiftDto>().id
+		return environment
+			.getDataLoader<Long, List<WorkerDto>>("workerLoader")
+			.load(productionId)
+	}
+}

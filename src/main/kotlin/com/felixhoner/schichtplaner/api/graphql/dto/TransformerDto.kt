@@ -25,4 +25,12 @@ class TransformerDto {
 		endTime = shift.endTime.toString()
 	)
 
+	fun toDto(worker: Worker) = WorkerDto(
+		id = worker.id,
+		uuid = worker.uuid.toString(),
+		firstname = worker.firstname,
+		lastname = worker.lastname,
+		email = worker.email
+	)
+
 }

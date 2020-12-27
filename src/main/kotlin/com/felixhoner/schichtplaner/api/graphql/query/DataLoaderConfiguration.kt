@@ -1,9 +1,8 @@
 package com.felixhoner.schichtplaner.api.graphql.query
 
 import com.expediagroup.graphql.spring.execution.DataLoaderRegistryFactory
+import com.felixhoner.schichtplaner.api.business.service.*
 import com.felixhoner.schichtplaner.api.graphql.dto.*
-import com.felixhoner.schichtplaner.api.business.service.ProductionService
-import com.felixhoner.schichtplaner.api.business.service.ShiftService
 import org.dataloader.DataLoader
 import org.dataloader.DataLoaderRegistry
 import org.springframework.context.annotation.Bean
@@ -14,6 +13,7 @@ import java.util.concurrent.CompletableFuture
 class DataLoaderConfiguration(
 	private val productionService: ProductionService,
 	private val shiftService: ShiftService,
+	private val workerService: WorkerService,
 	private val transformer: TransformerDto
 ) {
 	@Bean
@@ -22,6 +22,7 @@ class DataLoaderConfiguration(
 			override fun generate(): DataLoaderRegistry = DataLoaderRegistry().apply {
 				register("productionLoader", productionLoader)
 				register("shiftLoader", shiftLoader)
+				register("workerLoader", workerLoader)
 			}
 		}
 	}
@@ -41,6 +42,20 @@ class DataLoaderConfiguration(
 				.map {
 					it.map { shift -> transformer.toDto(shift) }
 				}
+		}
+	}
+
+	private val workerLoader = DataLoader<Long, List<WorkerDto>> { ids ->
+		CompletableFuture.supplyAsync {
+			val result = ids.map { Pair(it, mutableSetOf<WorkerDto>()) }.toMap()
+			val allWorkers = workerService.findAllByShift(ids)
+			result.forEach { m ->
+				val matched = allWorkers
+					.filter { worker -> worker.shiftIds.any { it == m.key } }
+					.map(transformer::toDto)
+				m.value.addAll(matched)
+			}
+			result.values.map { it.toList() }
 		}
 	}
 }
