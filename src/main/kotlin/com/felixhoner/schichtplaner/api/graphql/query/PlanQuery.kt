@@ -2,13 +2,13 @@ package com.felixhoner.schichtplaner.api.graphql.query
 
 import com.expediagroup.graphql.spring.operations.Query
 import com.felixhoner.schichtplaner.api.business.service.PlanService
+import com.felixhoner.schichtplaner.api.graphql.config.Authorised
 import com.felixhoner.schichtplaner.api.graphql.dto.*
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.beans.factory.BeanFactory
 import org.springframework.beans.factory.BeanFactoryAware
 import org.springframework.context.annotation.Scope
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import java.util.concurrent.CompletableFuture
@@ -21,7 +21,7 @@ class PlanQuery(
 	private val transformer: TransformerDto
 ): Query {
 
-	@PreAuthorize("hasRole('USER')")
+	@Authorised("ROLE_USER")
 	fun getPlans() = Mono.just(planService.getAll().map(transformer::toDto))
 
 }

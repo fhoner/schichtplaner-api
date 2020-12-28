@@ -51,12 +51,8 @@ class SecurityConfiguration {
 		authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
 
 		return http.authorizeExchange()
-			.pathMatchers("/user/signup")
-			.permitAll()
-			.pathMatchers("/user/login")
-			.permitAll()
 			.pathMatchers("/graphql")
-			.authenticated()
+			.permitAll()
 			.and()
 			.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
 			.httpBasic()
