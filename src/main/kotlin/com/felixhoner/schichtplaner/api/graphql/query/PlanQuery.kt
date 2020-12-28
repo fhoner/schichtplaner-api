@@ -8,7 +8,9 @@ import graphql.schema.DataFetchingEnvironment
 import org.springframework.beans.factory.BeanFactory
 import org.springframework.beans.factory.BeanFactoryAware
 import org.springframework.context.annotation.Scope
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
 import java.util.concurrent.CompletableFuture
 
 @Component
@@ -19,7 +21,8 @@ class PlanQuery(
 	private val transformer: TransformerDto
 ): Query {
 
-	fun getPlans(): List<PlanDto> = planService.getAll().map(transformer::toDto)
+	@PreAuthorize("hasRole('USER')")
+	fun getPlans() = Mono.just(planService.getAll().map(transformer::toDto))
 
 }
 
