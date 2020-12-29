@@ -1,4 +1,4 @@
-package com.felixhoner.schichtplaner.api.graphql.config
+package com.felixhoner.schichtplaner.api.graphql.execution
 
 import com.expediagroup.graphql.extensions.deepName
 import graphql.schema.*
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.BeanFactoryAware
 import org.springframework.stereotype.Component
 
 @Component
-class SpringDataFetcherFactory: DataFetcherFactory<Any?>, BeanFactoryAware {
+class DefaultDataFetcherFactory: DataFetcherFactory<Any?>, BeanFactoryAware {
 	private lateinit var beanFactory: BeanFactory
 
 	override fun setBeanFactory(beanFactory: BeanFactory) {

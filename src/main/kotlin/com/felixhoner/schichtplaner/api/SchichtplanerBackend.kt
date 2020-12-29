@@ -1,8 +1,8 @@
 package com.felixhoner.schichtplaner.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.felixhoner.schichtplaner.api.graphql.config.CustomDataFetcherFactoryProvider
-import com.felixhoner.schichtplaner.api.graphql.config.SpringDataFetcherFactory
+import com.felixhoner.schichtplaner.api.graphql.execution.CustomDataFetcherFactoryProvider
+import com.felixhoner.schichtplaner.api.graphql.execution.DefaultDataFetcherFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
@@ -15,10 +15,10 @@ class SchichtplanerBackend {
 
 	@Bean
 	fun dataFetcherFactoryProvider(
-		springDataFetcherFactory: SpringDataFetcherFactory,
+		defaultDataFetcherFactory: DefaultDataFetcherFactory,
 		objectMapper: ObjectMapper,
 		applicationContext: ApplicationContext
-	) = CustomDataFetcherFactoryProvider(springDataFetcherFactory, objectMapper, applicationContext)
+	) = CustomDataFetcherFactoryProvider(defaultDataFetcherFactory, objectMapper)
 
 }
 

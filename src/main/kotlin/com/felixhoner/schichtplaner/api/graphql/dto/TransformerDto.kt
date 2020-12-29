@@ -9,7 +9,8 @@ class TransformerDto {
 	fun toDto(plan: Plan) = PlanDto(
 		id = plan.id,
 		uuid = plan.uuid.toString(),
-		name = plan.name
+		name = plan.name,
+		secret = "secret"
 	)
 
 	fun toDto(production: Production) = ProductionDto(

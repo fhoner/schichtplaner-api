@@ -1,4 +1,4 @@
-package com.felixhoner.schichtplaner.api.graphql.config
+package com.felixhoner.schichtplaner.api.graphql.execution
 
 import com.expediagroup.graphql.spring.execution.SpringDataFetcher
 import com.fasterxml.jackson.databind.ObjectMapper
