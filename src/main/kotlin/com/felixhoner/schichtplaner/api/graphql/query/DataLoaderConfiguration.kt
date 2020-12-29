@@ -3,6 +3,7 @@ package com.felixhoner.schichtplaner.api.graphql.query
 import com.expediagroup.graphql.spring.execution.DataLoaderRegistryFactory
 import com.felixhoner.schichtplaner.api.business.service.*
 import com.felixhoner.schichtplaner.api.graphql.dto.*
+import com.felixhoner.schichtplaner.api.graphql.execution.GraphQLSecurityContext
 import org.dataloader.DataLoader
 import org.dataloader.DataLoaderRegistry
 import org.springframework.context.annotation.Bean

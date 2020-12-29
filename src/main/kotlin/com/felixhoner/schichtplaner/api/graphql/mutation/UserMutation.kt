@@ -1,4 +1,4 @@
-package com.felixhoner.schichtplaner.api.graphql.query
+package com.felixhoner.schichtplaner.api.graphql.mutation
 
 import com.expediagroup.graphql.spring.operations.Mutation
 import com.felixhoner.schichtplaner.api.security.JwtSigner
