@@ -12,7 +12,7 @@ data class PlanDto(
 	@GraphQLIgnore val id: Long,
 	val uuid: String,
 	val name: String,
-	@Authorized("MANAGER")
+	@property:Authorized("MANAGER")
 	val secret: String
 ) {
 	@JsonIgnore

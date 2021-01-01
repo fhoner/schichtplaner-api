@@ -2,6 +2,7 @@ package com.felixhoner.schichtplaner.api.graphql.dto
 
 import com.expediagroup.graphql.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 
 data class ShiftDto(
 	@GraphQLIgnore val id: Long,
@@ -11,6 +12,7 @@ data class ShiftDto(
 ) {
 
 	@JsonIgnore
+	@Authorized("MANAGER")
 	lateinit var workers: List<WorkerDto>
 
 }
