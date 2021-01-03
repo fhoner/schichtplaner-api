@@ -14,7 +14,7 @@ class UserService {
 				UserEntity(
 					email = "felix@honer.de",
 					password = "password",
-					roles = setOf(UserRole.ADMIN)
+					roles = setOf(UserRole.READER)
 				)
 			)
 		)

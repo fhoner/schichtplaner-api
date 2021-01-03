@@ -1,7 +1,7 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
 import com.expediagroup.graphql.annotations.GraphQLIgnore
-import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
+import com.felixhoner.schichtplaner.api.security.Writer
 
 data class WorkerDto(
 	@GraphQLIgnore val id: Long,
@@ -9,6 +9,6 @@ data class WorkerDto(
 	val firstname: String,
 	val lastname: String,
 
-	@property:Authorized("MANAGER")
+	@property:Writer
 	val email: String
 )

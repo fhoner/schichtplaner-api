@@ -3,7 +3,6 @@ package com.felixhoner.schichtplaner.api.graphql.dto
 import com.expediagroup.graphql.annotations.GraphQLIgnore
 import com.expediagroup.graphql.annotations.GraphQLName
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import org.springframework.context.annotation.Scope
 
 @Scope("prototype")
@@ -11,9 +10,7 @@ import org.springframework.context.annotation.Scope
 data class PlanDto(
 	@GraphQLIgnore val id: Long,
 	val uuid: String,
-	val name: String,
-	@property:Authorized("MANAGER")
-	val secret: String
+	val name: String
 ) {
 	@JsonIgnore
 	lateinit var productions: List<ProductionDto>
