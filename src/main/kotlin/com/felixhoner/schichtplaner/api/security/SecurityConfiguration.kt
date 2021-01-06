@@ -35,7 +35,7 @@ class SecurityConfiguration {
 					UsernamePasswordAuthenticationToken(
 						jws.body.subject,
 						authentication.credentials as String,
-						mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
+						(jws.body["roles"] as List<*>).map { SimpleGrantedAuthority("ROLE_$it") }.toMutableList()
 					)
 				}
 		}

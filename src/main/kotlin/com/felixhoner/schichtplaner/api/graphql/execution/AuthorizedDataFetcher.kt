@@ -33,7 +33,8 @@ class AuthorizedDataFetcher(
 	}
 
 	private fun checkRoles(securityContext: Mono<SecurityContext>): Mono<AuthorizationDecision> {
-		val voter = AuthorityReactiveAuthorizationManager.hasAnyAuthority<Any>(*requiredRoles.toTypedArray())
+		val requiredRolesPrefixed = requiredRoles.map { "ROLE_$it" }
+		val voter = AuthorityReactiveAuthorizationManager.hasAnyAuthority<Any>(*requiredRolesPrefixed.toTypedArray())
 		return voter.check(securityContext.map { it.authentication }, null).defaultIfEmpty(AuthorizationDecision(false))
 	}
 

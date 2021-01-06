@@ -11,6 +11,7 @@ data class LoginResponse(
 )
 
 @Component
+@Suppress("unused")
 class UserMutation(
 	private val userService: UserService,
 	private val jwtSigner: JwtSigner
@@ -19,7 +20,8 @@ class UserMutation(
 	fun login(email: String, password: String): Mono<LoginResponse> {
 		return userService.findByUsername(email)
 			.map {
-				val jwt = jwtSigner.createJwt(it.username)
+				val authorities = it.authorities.map { auth -> auth.authority }
+				val jwt = jwtSigner.createJwt(it.username, authorities)
 				LoginResponse(jwt)
 			}
 	}

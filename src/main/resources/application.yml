@@ -11,13 +11,3 @@ spring:
 graphql:
   packages:
     - "com.felixhoner.schichtplaner.api.graphql"
-
-springbootwebfluxjjwt:
-  password:
-    encoder:
-      secret: s3cr37
-      iteration: 33
-      keylength: 256
-  jjwt:
-    secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
-    expiration: 28800
