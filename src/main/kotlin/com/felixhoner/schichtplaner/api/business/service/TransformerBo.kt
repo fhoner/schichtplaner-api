@@ -1,6 +1,7 @@
 package com.felixhoner.schichtplaner.api.business.service
 
 import com.felixhoner.schichtplaner.api.business.model.*
+import com.felixhoner.schichtplaner.api.graphql.dto.UserRoleDto
 import com.felixhoner.schichtplaner.api.persistence.entity.*
 import org.springframework.stereotype.Component
 
@@ -34,5 +35,19 @@ class TransformerBo {
 		email = worker.email,
 		shiftIds = worker.shifts.map { it.id!! }
 	)
+
+	fun toBo(user: UserEntity) = User(
+		id = user.id!!,
+		uuid = user.uuid,
+		email = user.email,
+		password = user.password,
+		role = user.role
+	)
+
+	fun toBo(role: UserRoleDto) = when (role) {
+		UserRoleDto.READER -> UserRole.READER
+		UserRoleDto.WRITER -> UserRole.WRITER
+		UserRoleDto.ADMIN  -> UserRole.ADMIN
+	}
 
 }

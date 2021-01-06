@@ -3,6 +3,7 @@ package com.felixhoner.schichtplaner.api
 import com.felixhoner.schichtplaner.api.persistence.entity.*
 import com.felixhoner.schichtplaner.api.persistence.repository.*
 import org.springframework.context.annotation.Bean
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalTime.parse
 
@@ -11,7 +12,9 @@ class TestData(
 	private val planRepository: PlanRepository,
 	private val productionRepository: ProductionRepository,
 	private val shiftRepository: ShiftRepository,
-	private val workerRepository: WorkerRepository
+	private val workerRepository: WorkerRepository,
+	private val userRepository: UserRepository,
+	private val passwordEncoder: BCryptPasswordEncoder
 ) {
 
 	@Bean
@@ -20,6 +23,7 @@ class TestData(
 		workerRepository.deleteAll()
 		productionRepository.deleteAll()
 		planRepository.deleteAll()
+		userRepository.deleteAll()
 
 		val mariusReich = WorkerEntity("Marius", "Reich", "marius@reich.de")
 		val mikeEggert = WorkerEntity("Mike", "Eggert", "mike@eggert.de")
@@ -69,6 +73,23 @@ class TestData(
 				vtfBeerShift1, vtfBeerShift2, vtfBeerShift3, vtfBeerShift4, vtfBeerShift5, vtfBeerShift6, vtfBeerShift7
 			)
 		)
+
+		val fhoner = UserEntity(
+			email = "felix.honer@novatec-gmbh.de",
+			password = passwordEncoder.encode("felix"),
+			role = UserRole.ADMIN
+		)
+		val ssicher = UserEntity(
+			email = "siegfried.sicher@mail.com",
+			password = passwordEncoder.encode("siegfried"),
+			role = UserRole.WRITER
+		)
+		val mmüller = UserEntity(
+			email = "manfred.müller@mail.de",
+			password = passwordEncoder.encode("manfred"),
+			role = UserRole.READER
+		)
+		userRepository.saveAll(listOf(fhoner, ssicher, mmüller))
 	}
 
 }

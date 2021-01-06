@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
@@ -14,6 +15,9 @@ import reactor.core.publisher.Mono
 
 @Configuration
 class SecurityConfiguration {
+
+	@Bean
+	fun bCryptPasswordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
 
 	@Bean
 	fun jwtAuthenticationConverter(): ServerAuthenticationConverter {

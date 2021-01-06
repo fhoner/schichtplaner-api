@@ -4,17 +4,33 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.Email
 
+/**
+ * Roles are building on top of each other in a transitive manner.
+ * A user with the role WRITER always will have the role READER as well.
+ */
 enum class UserRole {
-	READER,
-	WRITER,
-	ADMIN
+	READER {
+		override fun get() = setOf("READER")
+	},
+	WRITER {
+		override fun get() = setOf("READER", "WRITER")
+	},
+	ADMIN {
+		override fun get() = setOf("READER", "WRITER", "ADMIN")
+	};
+
+	abstract fun get(): Set<String>
 }
 
-data class UserEntity(
+@Entity
+@Table(name = "user_account")
+class UserEntity(
 	@Email
 	val email: String,
 	val password: String,
-	val roles: Set<UserRole>
+
+	@Enumerated(EnumType.STRING)
+	val role: UserRole
 ) {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +38,5 @@ data class UserEntity(
 
 	@Column(unique = true)
 	val uuid: UUID = UUID.randomUUID()
+
 }

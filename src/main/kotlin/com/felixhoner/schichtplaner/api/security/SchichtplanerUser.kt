@@ -10,8 +10,8 @@ class SchichtplanerUser(
 ): UserDetails {
 
 	override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-		return user.roles
-			.joinToString(",") { it.toString() }
+		return user.role.get()
+			.joinToString(",")
 			.let { AuthorityUtils.commaSeparatedStringToAuthorityList(it) }
 	}
 
