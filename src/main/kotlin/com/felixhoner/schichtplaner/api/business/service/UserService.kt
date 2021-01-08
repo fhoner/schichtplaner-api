@@ -9,7 +9,6 @@ import com.felixhoner.schichtplaner.api.security.JwtSigner
 import com.felixhoner.schichtplaner.api.security.SchichtplanerUser
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 
 @Service
 class UserService(
@@ -18,7 +17,7 @@ class UserService(
 	private val passwordEncoder: BCryptPasswordEncoder,
 	private val transformer: TransformerBo
 ) {
-	fun login(username: String, password: String): Mono<String> {
+	fun login(username: String, password: String): String {
 		val dbresult = userRepository.findByEmail(username)
 		if (dbresult == null || !passwordEncoder.matches(password, dbresult.password)) {
 			throw InvalidCredentialsException("Username and password do not match")
@@ -26,17 +25,16 @@ class UserService(
 
 		val user = SchichtplanerUser(dbresult)
 		val authorities = user.authorities.map { auth -> auth.authority }
-		val jwt = jwtSigner.createJwt(user.username, authorities)
-		return Mono.just(jwt)
+		return jwtSigner.createJwt(user.username, authorities)
 	}
 
-	fun createUser(username: String, password: String, role: UserRoleDto): Mono<User> {
+	fun createUser(username: String, password: String, role: UserRoleDto): User {
 		val userEntity = UserEntity(
 			email = username,
 			password = passwordEncoder.encode(password),
 			role = transformer.toBo(role)
 		)
 		userRepository.save(userEntity)
-		return Mono.just(userEntity.let(transformer::toBo))
+		return userEntity.let(transformer::toBo)
 	}
 }

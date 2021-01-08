@@ -26,6 +26,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.4.1")
+	implementation("io.github.microutils:kotlin-logging:1.12.0")
 
 	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
