@@ -23,9 +23,9 @@ class SecurityConfiguration {
 	fun jwtAuthenticationConverter(): ServerAuthenticationConverter {
 		return ServerAuthenticationConverter { exchange ->
 			Mono.justOrEmpty(exchange)
-				.flatMap { Mono.justOrEmpty(it.request.headers["Authorization"]) }
+				.flatMap { Mono.justOrEmpty(it.request.cookies["access_token"]) }
 				.filter { it.isNotEmpty() }
-				.map { it[0].removePrefix("Bearer ") }
+				.map { it.first().value }
 				.map { UsernamePasswordAuthenticationToken(it, it) }
 		}
 	}
@@ -56,7 +56,7 @@ class SecurityConfiguration {
 
 		return http.authorizeExchange()
 			.pathMatchers("/graphql")
-			.permitAll()
+			.authenticated()
 			.pathMatchers("/auth/**")
 			.permitAll()
 			.and()

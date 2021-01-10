@@ -1,7 +1,6 @@
 package com.felixhoner.schichtplaner.api.business.service
 
-import com.felixhoner.schichtplaner.api.business.exception.InvalidCredentialsException
-import com.felixhoner.schichtplaner.api.business.exception.InvalidTokenException
+import com.felixhoner.schichtplaner.api.business.exception.*
 import com.felixhoner.schichtplaner.api.business.model.User
 import com.felixhoner.schichtplaner.api.graphql.dto.UserRoleDto
 import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
@@ -40,9 +39,20 @@ class UserService(
 		)
 	}
 
+	fun getUserByEmail(email: String): Mono<User> {
+		return userRepository.findByEmail(email)
+			?.let(transformer::toBo)
+			?.let { Mono.just(it) } ?: Mono.error(RuntimeException("User with email $email not found"))
+	}
+
 	@Suppress("UNCHECKED_CAST")
 	fun refreshToken(refreshToken: String, type: TokenType): Mono<String> = try {
 		jwtSigner.validateJwt(refreshToken)
+			.apply {
+				if (body["type"].toString() != "refresh") {
+					throw InvalidRefreshTargetException("Expected token to be of type refresh but wasn't")
+				}
+			}
 			.let {
 				when (type) {
 					TokenType.ACCESS  -> jwtSigner.createAccessToken(it.body.subject, it.body["roles"] as List<String>)

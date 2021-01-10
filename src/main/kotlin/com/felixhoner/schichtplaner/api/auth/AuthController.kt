@@ -16,10 +16,6 @@ data class LoginRequest(
 	val password: String
 )
 
-data class TokenRefreshRequest(
-	val token: String
-)
-
 @RestController
 @RequestMapping("/auth")
 class AuthController(
@@ -37,8 +33,8 @@ class AuthController(
 			}
 			.doOnNext {
 				response.apply {
-					addCookie(createCookie("access_token", it.accessToken, "/graphql"))
-					addCookie(createCookie("refresh_token", it.refreshToken, "/auth/refresh"))
+					addCookie(createCookie("access_token", it.accessToken, "/api/graphql"))
+					addCookie(createCookie("refresh_token", it.refreshToken, "/api/auth"))
 					response.statusCode = HttpStatus.CREATED
 				}
 			}
@@ -51,15 +47,15 @@ class AuthController(
 
 	@PostMapping("/refresh")
 	fun refreshToken(
-		@RequestBody request: TokenRefreshRequest,
+		@CookieValue(name = "refresh_token") token: String,
 		@RequestParam target: TokenType,
 		response: ServerHttpResponse
 	): Mono<Void> {
-		return userService.refreshToken(request.token, target)
+		return userService.refreshToken(token, target)
 			.doOnNext {
 				when (target) {
-					ACCESS  -> response.addCookie(createCookie("access_token", it, "/graphql"))
-					REFRESH -> response.addCookie(createCookie("refresh_token", it, "/auth/refresh"))
+					ACCESS  -> response.addCookie(createCookie("access_token", it, "/api/graphql"))
+					REFRESH -> response.addCookie(createCookie("refresh_token", it, "/api/auth"))
 				}
 				response.statusCode = HttpStatus.CREATED
 			}
@@ -74,7 +70,7 @@ class AuthController(
 		.from(name, value)
 		.path(path)
 		.sameSite("Strict")
-		.secure(true)
+		//		.secure(true)
 		.httpOnly(true)
 		.build()
 
