@@ -1,6 +1,7 @@
 package com.felixhoner.schichtplaner.api.business.service
 
 import com.felixhoner.schichtplaner.api.business.exception.InvalidCredentialsException
+import com.felixhoner.schichtplaner.api.business.exception.InvalidTokenException
 import com.felixhoner.schichtplaner.api.business.model.User
 import com.felixhoner.schichtplaner.api.graphql.dto.UserRoleDto
 import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
@@ -9,6 +10,12 @@ import com.felixhoner.schichtplaner.api.security.JwtSigner
 import com.felixhoner.schichtplaner.api.security.SchichtplanerUser
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
+
+enum class TokenType {
+	ACCESS,
+	REFRESH
+}
 
 @Service
 class UserService(
@@ -17,15 +24,34 @@ class UserService(
 	private val passwordEncoder: BCryptPasswordEncoder,
 	private val transformer: TransformerBo
 ) {
-	fun login(username: String, password: String): String {
+	fun login(username: String, password: String): Mono<Pair<String, String>> {
 		val dbresult = userRepository.findByEmail(username)
 		if (dbresult == null || !passwordEncoder.matches(password, dbresult.password)) {
-			throw InvalidCredentialsException("Username and password do not match")
+			return Mono.error(InvalidCredentialsException("Username and password do not match"))
 		}
 
 		val user = SchichtplanerUser(dbresult)
 		val authorities = user.authorities.map { auth -> auth.authority }
-		return jwtSigner.createJwt(user.username, authorities)
+		return Mono.just(
+			Pair(
+				jwtSigner.createAccessToken(user.username, authorities),
+				jwtSigner.createRefreshToken(user.username, authorities)
+			)
+		)
+	}
+
+	@Suppress("UNCHECKED_CAST")
+	fun refreshToken(refreshToken: String, type: TokenType): Mono<String> = try {
+		jwtSigner.validateJwt(refreshToken)
+			.let {
+				when (type) {
+					TokenType.ACCESS  -> jwtSigner.createAccessToken(it.body.subject, it.body["roles"] as List<String>)
+					TokenType.REFRESH -> jwtSigner.createRefreshToken(it.body.subject, it.body["roles"] as List<String>)
+				}
+			}
+			.let { Mono.just(it) }
+	} catch (ex: Exception) {
+		Mono.error(InvalidTokenException())
 	}
 
 	fun createUser(username: String, password: String, role: UserRoleDto): User {

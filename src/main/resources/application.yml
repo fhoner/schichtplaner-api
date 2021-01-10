@@ -8,6 +8,12 @@ spring:
     show-sql: true
     hibernate.ddl-auto: update
 
+authorization:
+  key: "3ruDg8e2OPHWIJrMEdwahJFFBmVLwRdxis7TFPkml-Sb2Hqr9HbhKcEpBSHS_91ohipPeCuOGvCU97FJFLvD3RsRPyqN5eN2hehT87XnRRYSSMG91hd3P_5h4jPGijBfAqW_66tEFqtMG6hmK6EzgkZdT1Dy1fpddxl-aTw2KZt3PH_nJ1K9jCjkNIRCOSHv5Et8olr-jDDoi9MSqE1hg-zXWFmETWWv-aIDxfRcWVuj_i1jCrfpSCBcStRhI-rao3j6lBppYRrE9MkGzNCAbyiflxK6iwYek63yxAky2stlYj5oKuIh-4tLASWOyBHJY4vjr5wZ2fCJ2KePrUMNnw"
+  expireAfterMinutes:
+    accessToken: 15
+    refreshToken: 1440
+
 graphql:
   packages:
     - "com.felixhoner.schichtplaner.api.graphql"

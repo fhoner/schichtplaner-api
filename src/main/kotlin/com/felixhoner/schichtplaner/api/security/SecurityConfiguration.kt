@@ -57,6 +57,8 @@ class SecurityConfiguration {
 		return http.authorizeExchange()
 			.pathMatchers("/graphql")
 			.permitAll()
+			.pathMatchers("/auth/**")
+			.permitAll()
 			.and()
 			.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
 			.httpBasic()
