@@ -2,6 +2,7 @@ package com.felixhoner.schichtplaner.api.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -9,8 +10,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter
-import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
+import org.springframework.security.web.server.authentication.*
 import reactor.core.publisher.Mono
 
 @Configuration
@@ -35,6 +35,7 @@ class SecurityConfiguration {
 		return ReactiveAuthenticationManager { authentication ->
 			Mono.justOrEmpty(authentication)
 				.map { jwtSigner.validateJwt(it.credentials as String) }
+				.onErrorResume { Mono.error(InvalidTokenException()) }
 				.map { jws ->
 					UsernamePasswordAuthenticationToken(
 						jws.body.subject,
@@ -61,6 +62,9 @@ class SecurityConfiguration {
 			.permitAll()
 			.and()
 			.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+			.exceptionHandling()
+			.authenticationEntryPoint(HttpStatusServerEntryPoint(HttpStatus.FORBIDDEN))
+			.and()
 			.httpBasic()
 			.disable()
 			.csrf()
@@ -72,3 +76,5 @@ class SecurityConfiguration {
 			.build()
 	}
 }
+
+class InvalidTokenException: Exception()
