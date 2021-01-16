@@ -49,7 +49,7 @@ class JwtSigner {
 	 */
 	fun validateJwt(jwt: String): Jws<Claims> {
 		return Jwts.parserBuilder()
-			.setSigningKey(key)
+			.setSigningKey(Keys.hmacShaKeyFor(key.toByteArray()))
 			.build()
 			.parseClaimsJws(jwt)
 	}
