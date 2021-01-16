@@ -45,6 +45,27 @@ class AuthController(
 			}
 	}
 
+	@PostMapping("/logout")
+	fun logout(response: ServerHttpResponse): Mono<Void> {
+		response.addCookie(
+			createCookie(
+				name = "access_token",
+				value = "",
+				path = "/api/graphql",
+				maxAge = 0
+			)
+		)
+		response.addCookie(
+			createCookie(
+				name = "refresh_token",
+				value = "",
+				path = "/api/auth",
+				maxAge = 0
+			)
+		)
+		return Mono.empty()
+	}
+
 	@PostMapping("/refresh")
 	fun refreshToken(
 		@CookieValue(name = "refresh_token") token: String,
@@ -66,11 +87,11 @@ class AuthController(
 			}
 	}
 
-	private fun createCookie(name: String, value: String, path: String) = ResponseCookie
+	private fun createCookie(name: String, value: String, path: String, maxAge: Long = -1) = ResponseCookie
 		.from(name, value)
 		.path(path)
+		.maxAge(maxAge)
 		.sameSite("Strict")
-		//		.secure(true)
 		.httpOnly(true)
 		.build()
 
