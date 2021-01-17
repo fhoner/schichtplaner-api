@@ -1,7 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
 import com.felixhoner.schichtplaner.api.business.model.*
-import com.felixhoner.schichtplaner.api.persistence.entity.UserRole
 import org.springframework.stereotype.Component
 
 @Component
@@ -37,13 +36,7 @@ class TransformerDto {
 	fun toDto(user: User) = UserDto(
 		uuid = user.uuid.toString(),
 		email = user.email,
-		role = toDto(user.role)
+		roles = user.role.get().toList()
 	)
-
-	fun toDto(role: UserRole) = when (role) {
-		UserRole.READER -> UserRoleDto.READER
-		UserRole.WRITER -> UserRoleDto.WRITER
-		UserRole.ADMIN  -> UserRoleDto.ADMIN
-	}
 
 }
