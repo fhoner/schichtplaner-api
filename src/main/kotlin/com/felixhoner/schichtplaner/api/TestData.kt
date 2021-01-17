@@ -3,11 +3,13 @@ package com.felixhoner.schichtplaner.api
 import com.felixhoner.schichtplaner.api.persistence.entity.*
 import com.felixhoner.schichtplaner.api.persistence.repository.*
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalTime.parse
 
 @Component
+@Profile("testdata")
 class TestData(
 	private val planRepository: PlanRepository,
 	private val productionRepository: ProductionRepository,
