@@ -45,6 +45,7 @@ class ProductionsDataFetcher : DataFetcher<CompletableFuture<List<ProductionDto>
         val planId = environment.getSource<PlanDto>().id
         return environment
             .getDataLoader<Long, List<ProductionDto>>("productionLoader")
+            .clearAll()
             .load(planId)
     }
 }
@@ -63,6 +64,7 @@ class ShiftsDataFetcher : DataFetcher<CompletableFuture<List<ShiftDto>>>, BeanFa
         val productionId = environment.getSource<ProductionDto>().id
         return environment
             .getDataLoader<Long, List<ShiftDto>>("shiftLoader")
+            .clearAll()
             .load(productionId)
     }
 }
@@ -84,6 +86,7 @@ class WorkersDataFetcher : DataFetcher<CompletableFuture<List<WorkerDto>>>, Bean
             .flatMap {
                 environment
                     .getDataLoader<Long, List<WorkerDto>>("workerLoader")
+                    .clearAll()
                     .load(productionId)
                     .toMono()
             }.toFuture()
