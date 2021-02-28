@@ -18,25 +18,25 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Testcontainers
 class PlanRepositoryTest {
 
-	@Autowired
-	lateinit var cut: PlanRepository
+    @Autowired
+    lateinit var cut: PlanRepository
 
-	@Test
-	fun insert() {
-		val plan = PlanEntity("Konzert 2021")
-		cut.save(plan)
-	}
+    @Test
+    fun insert() {
+        val plan = PlanEntity("Konzert 2021")
+        cut.save(plan)
+    }
 
-	companion object {
-		@Container
-		val container = PostgreSQLContainer<Nothing>("postgres:13").apply { start() }
+    companion object {
+        @Container
+        val container = PostgreSQLContainer<Nothing>("postgres:13").apply { start() }
 
-		@JvmStatic
-		@DynamicPropertySource
-		fun properties(registry: DynamicPropertyRegistry) {
-			registry.add("spring.datasource.url", container::getJdbcUrl);
-			registry.add("spring.datasource.password", container::getPassword);
-			registry.add("spring.datasource.username", container::getUsername);
-		}
-	}
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", container::getJdbcUrl)
+            registry.add("spring.datasource.password", container::getPassword)
+            registry.add("spring.datasource.username", container::getUsername)
+        }
+    }
 }

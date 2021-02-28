@@ -4,9 +4,9 @@ import com.felixhoner.schichtplaner.api.persistence.entity.UserRole
 import java.util.*
 
 data class User(
-	val id: Long,
-	val uuid: UUID,
-	val email: String,
-	val password: String,
-	val role: UserRole
+    val id: Long,
+    val uuid: UUID,
+    val email: String,
+    val password: String,
+    val role: UserRole
 )

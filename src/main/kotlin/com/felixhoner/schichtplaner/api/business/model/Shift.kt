@@ -4,8 +4,8 @@ import java.time.LocalTime
 import java.util.*
 
 data class Shift(
-	val id: Long,
-	val uuid: UUID,
-	val startTime: LocalTime,
-	val endTime: LocalTime,
+    val id: Long,
+    val uuid: UUID,
+    val startTime: LocalTime,
+    val endTime: LocalTime,
 )

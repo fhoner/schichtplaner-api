@@ -10,71 +10,73 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.security.web.server.authentication.*
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter
+import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
 import reactor.core.publisher.Mono
 
 @Configuration
 class SecurityConfiguration {
 
-	@Bean
-	fun bCryptPasswordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
+    @Bean
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
 
-	@Bean
-	fun jwtAuthenticationConverter(): ServerAuthenticationConverter {
-		return ServerAuthenticationConverter { exchange ->
-			Mono.justOrEmpty(exchange)
-				.flatMap { Mono.justOrEmpty(it.request.cookies["access_token"]) }
-				.filter { it.isNotEmpty() }
-				.map { it.first().value }
-				.map { UsernamePasswordAuthenticationToken(it, it) }
-		}
-	}
+    @Bean
+    fun jwtAuthenticationConverter(): ServerAuthenticationConverter {
+        return ServerAuthenticationConverter { exchange ->
+            Mono.justOrEmpty(exchange)
+                .flatMap { Mono.justOrEmpty(it.request.cookies["access_token"]) }
+                .filter { it.isNotEmpty() }
+                .map { it.first().value }
+                .map { UsernamePasswordAuthenticationToken(it, it) }
+        }
+    }
 
-	@Bean
-	fun jwtAuthenticationManager(jwtSigner: JwtSigner): ReactiveAuthenticationManager {
-		return ReactiveAuthenticationManager { authentication ->
-			Mono.justOrEmpty(authentication)
-				.map { jwtSigner.validateJwt(it.credentials as String) }
-				.onErrorResume { Mono.error(InvalidTokenException()) }
-				.map { jws ->
-					UsernamePasswordAuthenticationToken(
-						jws.body.subject,
-						authentication.credentials as String,
-						(jws.body["roles"] as List<*>).map { SimpleGrantedAuthority("ROLE_$it") }.toMutableList()
-					)
-				}
-		}
-	}
+    @Bean
+    fun jwtAuthenticationManager(jwtSigner: JwtSigner): ReactiveAuthenticationManager {
+        return ReactiveAuthenticationManager { authentication ->
+            Mono.justOrEmpty(authentication)
+                .map { jwtSigner.validateJwt(it.credentials as String) }
+                .onErrorResume { Mono.error(InvalidTokenException()) }
+                .map { jws ->
+                    UsernamePasswordAuthenticationToken(
+                        jws.body.subject,
+                        authentication.credentials as String,
+                        (jws.body["roles"] as List<*>).map { SimpleGrantedAuthority("ROLE_$it") }.toMutableList()
+                    )
+                }
+        }
+    }
 
-	@Bean
-	fun securityWebFilterChain(
-		http: ServerHttpSecurity,
-		jwtAuthenticationManager: ReactiveAuthenticationManager,
-		jwtAuthenticationConverter: ServerAuthenticationConverter
-	): SecurityWebFilterChain {
-		val authenticationWebFilter = AuthenticationWebFilter(jwtAuthenticationManager)
-		authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
+    @Bean
+    fun securityWebFilterChain(
+        http: ServerHttpSecurity,
+        jwtAuthenticationManager: ReactiveAuthenticationManager,
+        jwtAuthenticationConverter: ServerAuthenticationConverter
+    ): SecurityWebFilterChain {
+        val authenticationWebFilter = AuthenticationWebFilter(jwtAuthenticationManager)
+        authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
 
-		return http.authorizeExchange()
-			.pathMatchers("/graphql")
-			.authenticated()
-			.pathMatchers("/auth/**")
-			.permitAll()
-			.and()
-			.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-			.exceptionHandling()
-			.authenticationEntryPoint(HttpStatusServerEntryPoint(HttpStatus.FORBIDDEN))
-			.and()
-			.httpBasic()
-			.disable()
-			.csrf()
-			.disable()
-			.formLogin()
-			.disable()
-			.logout()
-			.disable()
-			.build()
-	}
+        return http.authorizeExchange()
+            .pathMatchers("/graphql")
+            .authenticated()
+            .pathMatchers("/auth/**")
+            .permitAll()
+            .and()
+            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+            .exceptionHandling()
+            .authenticationEntryPoint(HttpStatusServerEntryPoint(HttpStatus.FORBIDDEN))
+            .and()
+            .httpBasic()
+            .disable()
+            .csrf()
+            .disable()
+            .formLogin()
+            .disable()
+            .logout()
+            .disable()
+            .build()
+    }
 }
 
-class InvalidTokenException: Exception()
+class InvalidTokenException : Exception()

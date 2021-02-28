@@ -13,12 +13,12 @@ import reactor.core.publisher.Mono
 @Scope("prototype")
 @Suppress("unused")
 class UserQuery(
-	private val userService: UserService,
-	private val transformer: TransformerDto
-): Query {
+    private val userService: UserService,
+    private val transformer: TransformerDto
+) : Query {
 
-	fun getMyProfile(context: GraphQLSecurityContext): Mono<UserDto> =
-		context.securityContext
-			.flatMap { userService.getUserByEmail(it.authentication.principal.toString()) }
-			.map { transformer.toDto(it) }
+    fun getMyProfile(context: GraphQLSecurityContext): Mono<UserDto> =
+        context.securityContext
+            .flatMap { userService.getUserByEmail(it.authentication.principal.toString()) }
+            .map { transformer.toDto(it) }
 }

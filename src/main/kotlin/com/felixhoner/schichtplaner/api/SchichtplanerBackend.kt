@@ -15,18 +15,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableReactiveMethodSecurity
 class SchichtplanerBackend {
 
-	@Bean
-	fun dataFetcherFactoryProvider(
-		objectMapper: ObjectMapper,
-		applicationContext: ApplicationContext,
-		beanFactory: BeanFactory
-	) = CustomDataFetcherFactoryProvider(objectMapper, beanFactory)
+    @Bean
+    fun dataFetcherFactoryProvider(
+        objectMapper: ObjectMapper,
+        applicationContext: ApplicationContext,
+        beanFactory: BeanFactory
+    ) = CustomDataFetcherFactoryProvider(objectMapper, beanFactory)
 
-	@Bean
-	fun dataFetcherExceptionHandler(): DataFetcherExceptionHandler = CustomDataFetcherExceptionHandler()
+    @Bean
+    fun dataFetcherExceptionHandler(): DataFetcherExceptionHandler = CustomDataFetcherExceptionHandler()
 
 }
 
 fun main(args: Array<String>) {
-	runApplication<SchichtplanerBackend>(*args)
+    runApplication<SchichtplanerBackend>(*args)
 }

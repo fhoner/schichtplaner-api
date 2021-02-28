@@ -4,11 +4,11 @@ import com.expediagroup.graphql.annotations.GraphQLIgnore
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 
 data class WorkerDto(
-	@GraphQLIgnore val id: Long,
-	val uuid: String,
-	val firstname: String,
-	val lastname: String,
+    @GraphQLIgnore val id: Long,
+    val uuid: String,
+    val firstname: String,
+    val lastname: String,
 
-	@property:Authorized("WRITER")
-	val email: String
+    @property:Authorized("WRITER")
+    val email: String
 )
