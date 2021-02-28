@@ -7,6 +7,6 @@ import com.felixhoner.schichtplaner.api.business.exception.ErrorDefinition
  * The exception will be caught and transformed by [CustomDataFetcherExceptionHandler].
  */
 open class GraphQLException(
-	val error: ErrorDefinition,
-	exception: Throwable
-): Exception(error.message, exception)
+    val error: ErrorDefinition,
+    exception: Throwable
+) : Exception(error.message, exception)

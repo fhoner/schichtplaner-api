@@ -6,9 +6,9 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserRepository: CrudRepository<UserEntity, Long> {
+interface UserRepository : CrudRepository<UserEntity, Long> {
 
-	@Query("select u from UserEntity u where u.email = :email")
-	fun findByEmail(email: String): UserEntity?
+    @Query("select u from UserEntity u where u.email = :email")
+    fun findByEmail(email: String): UserEntity?
 
 }

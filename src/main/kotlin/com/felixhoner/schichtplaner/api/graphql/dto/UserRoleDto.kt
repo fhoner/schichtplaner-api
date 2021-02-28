@@ -4,7 +4,7 @@ import com.expediagroup.graphql.annotations.GraphQLName
 
 @GraphQLName("UserRole")
 enum class UserRoleDto {
-	READER,
-	WRITER,
-	ADMIN
+    READER,
+    WRITER,
+    ADMIN
 }

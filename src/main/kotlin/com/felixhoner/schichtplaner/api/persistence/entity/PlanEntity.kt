@@ -1,20 +1,25 @@
 package com.felixhoner.schichtplaner.api.persistence.entity
 
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.Table
 import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "plan")
 class PlanEntity(
-	@NotBlank
-	val name: String,
+    @NotBlank
+    val name: String,
 ) {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	var id: Long? = null
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
-	@Column(unique = true)
-	val uuid: UUID = UUID.randomUUID()
+    @Column(unique = true)
+    val uuid: UUID = UUID.randomUUID()
 }

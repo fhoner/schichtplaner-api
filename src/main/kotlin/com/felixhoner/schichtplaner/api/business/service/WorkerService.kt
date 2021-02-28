@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class WorkerService(
-	private val workerRepository: WorkerRepository,
-	private val transformer: TransformerBo,
+    private val workerRepository: WorkerRepository,
+    private val transformer: TransformerBo,
 ) {
 
-	fun findAllByShift(shiftIds: List<Long>): List<Worker> = workerRepository.findAllByShiftIds(shiftIds).map(transformer::toBo)
+    fun findAllByShift(shiftIds: List<Long>): List<Worker> = workerRepository.findAllByShiftIds(shiftIds).map(transformer::toBo)
 }

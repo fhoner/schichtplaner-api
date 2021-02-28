@@ -1,7 +1,16 @@
 package com.felixhoner.schichtplaner.api
 
-import com.felixhoner.schichtplaner.api.persistence.entity.*
-import com.felixhoner.schichtplaner.api.persistence.repository.*
+import com.felixhoner.schichtplaner.api.persistence.entity.PlanEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.ProductionEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.UserRole
+import com.felixhoner.schichtplaner.api.persistence.entity.WorkerEntity
+import com.felixhoner.schichtplaner.api.persistence.repository.PlanRepository
+import com.felixhoner.schichtplaner.api.persistence.repository.ProductionRepository
+import com.felixhoner.schichtplaner.api.persistence.repository.ShiftRepository
+import com.felixhoner.schichtplaner.api.persistence.repository.UserRepository
+import com.felixhoner.schichtplaner.api.persistence.repository.WorkerRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -11,87 +20,87 @@ import java.time.LocalTime.parse
 @Component
 @Profile("testdata")
 class TestData(
-	private val planRepository: PlanRepository,
-	private val productionRepository: ProductionRepository,
-	private val shiftRepository: ShiftRepository,
-	private val workerRepository: WorkerRepository,
-	private val userRepository: UserRepository,
-	private val passwordEncoder: BCryptPasswordEncoder
+    private val planRepository: PlanRepository,
+    private val productionRepository: ProductionRepository,
+    private val shiftRepository: ShiftRepository,
+    private val workerRepository: WorkerRepository,
+    private val userRepository: UserRepository,
+    private val passwordEncoder: BCryptPasswordEncoder
 ) {
 
-	@Bean
-	fun insertTestData() {
-		shiftRepository.deleteAll()
-		workerRepository.deleteAll()
-		productionRepository.deleteAll()
-		planRepository.deleteAll()
-		userRepository.deleteAll()
+    @Bean
+    fun insertTestData() {
+        shiftRepository.deleteAll()
+        workerRepository.deleteAll()
+        productionRepository.deleteAll()
+        planRepository.deleteAll()
+        userRepository.deleteAll()
 
-		val mariusReich = WorkerEntity("Marius", "Reich", "marius@reich.de")
-		val mikeEggert = WorkerEntity("Mike", "Eggert", "mike@eggert.de")
-		val edeltraudBaar = WorkerEntity("Edeltraud", "Baar", "edeltraud@baar.de")
-		val robinSigmund = WorkerEntity("Robin", "Sigmund", "robin@sigmund.de")
-		val sabineHarst = WorkerEntity("Sabine", "Harst", "sabine@harst.de")
-		val gretaLiebert = WorkerEntity("Greta", "Liebert", "greta@liebert.de")
-		workerRepository.saveAll(listOf(mariusReich, mikeEggert, edeltraudBaar, robinSigmund, sabineHarst, gretaLiebert))
+        val mariusReich = WorkerEntity("Marius", "Reich", "marius@reich.de")
+        val mikeEggert = WorkerEntity("Mike", "Eggert", "mike@eggert.de")
+        val edeltraudBaar = WorkerEntity("Edeltraud", "Baar", "edeltraud@baar.de")
+        val robinSigmund = WorkerEntity("Robin", "Sigmund", "robin@sigmund.de")
+        val sabineHarst = WorkerEntity("Sabine", "Harst", "sabine@harst.de")
+        val gretaLiebert = WorkerEntity("Greta", "Liebert", "greta@liebert.de")
+        workerRepository.saveAll(listOf(mariusReich, mikeEggert, edeltraudBaar, robinSigmund, sabineHarst, gretaLiebert))
 
-		val konzert = PlanEntity("Konzert 2021")
-		val vtf = PlanEntity("Vatertagsfest 2021")
-		val kabarett = PlanEntity("Kabarett 2021")
-		planRepository.saveAll(listOf(konzert, vtf, kabarett))
+        val konzert = PlanEntity("Konzert 2021")
+        val vtf = PlanEntity("Vatertagsfest 2021")
+        val kabarett = PlanEntity("Kabarett 2021")
+        planRepository.saveAll(listOf(konzert, vtf, kabarett))
 
-		val konzertEntrance = ProductionEntity("Einlass", konzert)
-		val konzertDrinks = ProductionEntity("Getränke", konzert)
-		val vtfDrinks = ProductionEntity("Getränke", vtf)
-		val vtfFries = ProductionEntity("Pommes", vtf)
-		val vtfBeer = ProductionEntity("Bier", vtf)
-		val kabarettEntrance = ProductionEntity("Einlass", kabarett)
-		productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, vtfBeer, kabarettEntrance))
+        val konzertEntrance = ProductionEntity("Einlass", konzert)
+        val konzertDrinks = ProductionEntity("Getränke", konzert)
+        val vtfDrinks = ProductionEntity("Getränke", vtf)
+        val vtfFries = ProductionEntity("Pommes", vtf)
+        val vtfBeer = ProductionEntity("Bier", vtf)
+        val kabarettEntrance = ProductionEntity("Einlass", kabarett)
+        productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, vtfBeer, kabarettEntrance))
 
-		val konzertEntranceShift = ShiftEntity(parse("19:00"), parse("20:30"), konzertEntrance)
-			.apply { workers.add(gretaLiebert) }
-		val vtfDrinksShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfDrinks)
-			.apply { workers.add(mariusReich) }
-		val vtfDrinksShift2 = ShiftEntity(parse("14:00"), parse("18:30"), vtfDrinks)
-			.apply { workers.add(mikeEggert) }
-		val vtfDrinksShift3 = ShiftEntity(parse("18:30"), parse("23:45"), vtfDrinks)
-			.apply { workers.addAll(listOf(mikeEggert, edeltraudBaar)) }
-		val vtfFriesShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfFries)
-		val vtfFriesShift2 = ShiftEntity(parse("14:00"), parse("18:30"), vtfFries)
-			.apply { workers.addAll(listOf(robinSigmund, sabineHarst)) }
-		val vtfFriesShift3 = ShiftEntity(parse("18:30"), parse("23:45"), vtfFries)
-		val vtfBeerShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfBeer)
-		val vtfBeerShift2 = ShiftEntity(parse("11:00"), parse("15:30"), vtfBeer)
-		val vtfBeerShift3 = ShiftEntity(parse("12:00"), parse("16:30"), vtfBeer)
-		val vtfBeerShift4 = ShiftEntity(parse("14:00"), parse("18:30"), vtfBeer)
-		val vtfBeerShift5 = ShiftEntity(parse("15:30"), parse("20:00"), vtfBeer)
-		val vtfBeerShift6 = ShiftEntity(parse("16:30"), parse("21:00"), vtfBeer)
-		val vtfBeerShift7 = ShiftEntity(parse("18:30"), parse("23:45"), vtfBeer)
-		shiftRepository.saveAll(
-			listOf(
-				konzertEntranceShift,
-				vtfDrinksShift1, vtfDrinksShift2, vtfDrinksShift3,
-				vtfFriesShift1, vtfFriesShift2, vtfFriesShift3,
-				vtfBeerShift1, vtfBeerShift2, vtfBeerShift3, vtfBeerShift4, vtfBeerShift5, vtfBeerShift6, vtfBeerShift7
-			)
-		)
+        val konzertEntranceShift = ShiftEntity(parse("19:00"), parse("20:30"), konzertEntrance)
+            .apply { workers.add(gretaLiebert) }
+        val vtfDrinksShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfDrinks)
+            .apply { workers.add(mariusReich) }
+        val vtfDrinksShift2 = ShiftEntity(parse("14:00"), parse("18:30"), vtfDrinks)
+            .apply { workers.add(mikeEggert) }
+        val vtfDrinksShift3 = ShiftEntity(parse("18:30"), parse("23:45"), vtfDrinks)
+            .apply { workers.addAll(listOf(mikeEggert, edeltraudBaar)) }
+        val vtfFriesShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfFries)
+        val vtfFriesShift2 = ShiftEntity(parse("14:00"), parse("18:30"), vtfFries)
+            .apply { workers.addAll(listOf(robinSigmund, sabineHarst)) }
+        val vtfFriesShift3 = ShiftEntity(parse("18:30"), parse("23:45"), vtfFries)
+        val vtfBeerShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfBeer)
+        val vtfBeerShift2 = ShiftEntity(parse("11:00"), parse("15:30"), vtfBeer)
+        val vtfBeerShift3 = ShiftEntity(parse("12:00"), parse("16:30"), vtfBeer)
+        val vtfBeerShift4 = ShiftEntity(parse("14:00"), parse("18:30"), vtfBeer)
+        val vtfBeerShift5 = ShiftEntity(parse("15:30"), parse("20:00"), vtfBeer)
+        val vtfBeerShift6 = ShiftEntity(parse("16:30"), parse("21:00"), vtfBeer)
+        val vtfBeerShift7 = ShiftEntity(parse("18:30"), parse("23:45"), vtfBeer)
+        shiftRepository.saveAll(
+            listOf(
+                konzertEntranceShift,
+                vtfDrinksShift1, vtfDrinksShift2, vtfDrinksShift3,
+                vtfFriesShift1, vtfFriesShift2, vtfFriesShift3,
+                vtfBeerShift1, vtfBeerShift2, vtfBeerShift3, vtfBeerShift4, vtfBeerShift5, vtfBeerShift6, vtfBeerShift7
+            )
+        )
 
-		val fhoner = UserEntity(
-			email = "felix.honer@novatec-gmbh.de",
-			password = passwordEncoder.encode("felix"),
-			role = UserRole.ADMIN
-		)
-		val ssicher = UserEntity(
-			email = "siegfried.sicher@mail.com",
-			password = passwordEncoder.encode("siegfried"),
-			role = UserRole.WRITER
-		)
-		val mmüller = UserEntity(
-			email = "manfred.müller@mail.de",
-			password = passwordEncoder.encode("manfred"),
-			role = UserRole.READER
-		)
-		userRepository.saveAll(listOf(fhoner, ssicher, mmüller))
-	}
+        val fhoner = UserEntity(
+            email = "felix.honer@novatec-gmbh.de",
+            password = passwordEncoder.encode("felix"),
+            role = UserRole.ADMIN
+        )
+        val ssicher = UserEntity(
+            email = "siegfried.sicher@mail.com",
+            password = passwordEncoder.encode("siegfried"),
+            role = UserRole.WRITER
+        )
+        val mmüller = UserEntity(
+            email = "manfred.müller@mail.de",
+            password = passwordEncoder.encode("manfred"),
+            role = UserRole.READER
+        )
+        userRepository.saveAll(listOf(fhoner, ssicher, mmüller))
+    }
 
 }

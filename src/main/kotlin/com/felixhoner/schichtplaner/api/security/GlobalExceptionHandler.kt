@@ -13,21 +13,21 @@ import reactor.core.publisher.Mono
 
 @Configuration
 @Order(-2)
-class GlobalErrorHandler: ErrorWebExceptionHandler {
+class GlobalErrorHandler : ErrorWebExceptionHandler {
 
-	private val logger = KotlinLogging.logger {}
+    private val logger = KotlinLogging.logger {}
 
-	override fun handle(serverWebExchange: ServerWebExchange, throwable: Throwable): Mono<Void> {
-		logger.error("Exception thrown: ", throwable)
-		val bufferFactory = serverWebExchange.response.bufferFactory()
+    override fun handle(serverWebExchange: ServerWebExchange, throwable: Throwable): Mono<Void> {
+        logger.error("Exception thrown: ", throwable)
+        val bufferFactory = serverWebExchange.response.bufferFactory()
 
-		serverWebExchange.response.statusCode = when (throwable) {
-			is InvalidTokenException   -> UNAUTHORIZED
-			is ResponseStatusException -> throwable.status
-			else                       -> INTERNAL_SERVER_ERROR
-		}
+        serverWebExchange.response.statusCode = when (throwable) {
+            is InvalidTokenException -> UNAUTHORIZED
+            is ResponseStatusException -> throwable.status
+            else -> INTERNAL_SERVER_ERROR
+        }
 
-		val dataBuffer: DataBuffer = bufferFactory.wrap("".toByteArray())
-		return serverWebExchange.response.writeWith(Mono.just(dataBuffer))
-	}
+        val dataBuffer: DataBuffer = bufferFactory.wrap("".toByteArray())
+        return serverWebExchange.response.writeWith(Mono.just(dataBuffer))
+    }
 }

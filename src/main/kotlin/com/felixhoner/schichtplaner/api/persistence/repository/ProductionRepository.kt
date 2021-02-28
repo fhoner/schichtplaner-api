@@ -6,9 +6,9 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProductionRepository: CrudRepository<ProductionEntity, Long> {
+interface ProductionRepository : CrudRepository<ProductionEntity, Long> {
 
-	@Query("select p from ProductionEntity p where p.plan.id in :planIds")
-	fun findAllByPlanIds(planIds: List<Long>): List<ProductionEntity>
+    @Query("select p from ProductionEntity p where p.plan.id in :planIds")
+    fun findAllByPlanIds(planIds: List<Long>): List<ProductionEntity>
 
 }
