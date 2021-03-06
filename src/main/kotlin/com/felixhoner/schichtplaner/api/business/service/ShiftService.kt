@@ -26,13 +26,20 @@ class ShiftService(
 
     fun createShift(productionUuid: UUID, startTime: String, endTime: String): Shift {
         val production = productionRepository.findByUuid(productionUuid) ?: throw RuntimeException("NOT FOUND")
+        val startLt = LocalTime.parse(startTime)
+        val endLt = LocalTime.parse(endTime)
+        getByProduction(production.id!!).find { it.startTime == startLt && it.endTime == it.endTime }
+            ?.apply { throw RuntimeException("The production already contains a shift [$startTime, $endTime]") }
         val newShift = ShiftEntity(
-            startTime = LocalTime.parse(startTime),
-            endTime = LocalTime.parse(endTime),
+            startTime = startLt,
+            endTime = endLt,
             production = production
         )
         return shiftRepository.save(newShift)
             .let(transformer::toBo)
     }
+
+    private fun getByProduction(productionId: Long): List<ShiftEntity> =
+        this.shiftRepository.findAllByProductionIds(listOf(productionId))
 
 }
