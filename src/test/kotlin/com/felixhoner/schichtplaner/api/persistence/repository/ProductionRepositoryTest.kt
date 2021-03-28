@@ -2,22 +2,26 @@ package com.felixhoner.schichtplaner.api.persistence.repository
 
 import com.felixhoner.schichtplaner.api.persistence.entity.PlanEntity
 import com.felixhoner.schichtplaner.api.persistence.entity.ProductionEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
+import com.felixhoner.schichtplaner.api.util.DatabaseTest
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
+import java.time.LocalTime.parse
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(SpringExtension::class)
-@Testcontainers
+@ExtendWith(value = [SpringExtension::class])
+@DataJpaTest
+@DatabaseTest
+@AutoConfigureTestDatabase
 class ProductionRepositoryTest {
 
     @Autowired
@@ -26,36 +30,71 @@ class ProductionRepositoryTest {
     @Autowired
     lateinit var productionRepository: ProductionRepository
 
+    @Autowired
+    lateinit var shiftRepository: ShiftRepository
+
+    private val konzert = PlanEntity("Konzert 2021")
+    private val vtf = PlanEntity("Vatertagsfest 2021")
+    private val kabarett = PlanEntity("Kabarett 2021")
+
+    private val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)
+    private val konzertDrinks = ProductionEntity(name = "Getränke", plan = konzert)
+    private val vtfDrinks = ProductionEntity(name = "Getränke", plan = vtf)
+    private val vtfFries = ProductionEntity(name = "Pommes", plan = vtf)
+    private val kabarettEntrance = ProductionEntity(name = "Einlass", plan = kabarett)
+
+    @BeforeEach
+    fun setup() {
+        planRepository.saveAll(listOf(konzert, vtf, kabarett))
+        productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, kabarettEntrance))
+    }
+
     @Test
     fun `should find by plans`() {
-        val konzert = PlanEntity("Konzert 2021")
-        val vtf = PlanEntity("Vatertagsfest 2021")
-        val kabarett = PlanEntity("Kabarett 2021")
-        planRepository.saveAll(listOf(konzert, vtf, kabarett))
-
-        val konzertEntrance = ProductionEntity("Einlass", konzert)
-        val konzertDrinks = ProductionEntity("Getränke", konzert)
-        val vtfDrinks = ProductionEntity("Getränke", vtf)
-        val vtfFries = ProductionEntity("Pommes", vtf)
-        val kabarettEntrance = ProductionEntity("Einlass", kabarett)
-        productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, kabarettEntrance))
-
         val queried = listOf(konzert, vtf).map { it.id!! }
         val result = productionRepository.findAllByPlanIds(queried)
         result shouldHaveSize 4
         result.map { it.name } shouldContainExactlyInAnyOrder listOf("Einlass", "Getränke", "Getränke", "Pommes")
     }
 
-    companion object {
-        @Container
-        val container = PostgreSQLContainer<Nothing>("postgres:13").apply { start() }
+    @Nested
+    inner class FindByUuid {
 
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", container::getJdbcUrl)
-            registry.add("spring.datasource.password", container::getPassword)
-            registry.add("spring.datasource.username", container::getUsername)
+        @BeforeEach
+        fun insertShifts() {
+            val drinksShifts = listOf(ShiftEntity(startTime = parse("11:00"), endTime = parse("12:00")))
+            val entranceShifts = listOf(
+                ShiftEntity(startTime = parse("14:00"), endTime = parse("15:00")),
+                ShiftEntity(startTime = parse("15:00"), endTime = parse("16:00"))
+            )
+            shiftRepository.saveAll(drinksShifts + entranceShifts)
+
+            konzertDrinks.shifts.addAll(drinksShifts)
+            konzertEntrance.shifts.addAll(entranceShifts)
+            productionRepository.save(konzertEntrance)
         }
+
+        @Test
+        fun `should find by uuid and fetch shifts`() {
+            val result = productionRepository.findByUuid(konzertEntrance.uuid)
+            result shouldNotBe null
+            result!!.shifts shouldHaveSize 2
+            result.shifts[0].apply {
+                startTime shouldBe parse("14:00")
+                endTime shouldBe parse("15:00")
+            }
+            result.shifts[1].apply {
+                startTime shouldBe parse("15:00")
+                endTime shouldBe parse("16:00")
+            }
+        }
+
+        @Test
+        fun `should find by uuid if no shift exists`() {
+            val result = productionRepository.findByUuid(vtfFries.uuid)
+            result shouldNotBe null
+            result!!.shifts shouldHaveSize 0
+        }
+
     }
 }

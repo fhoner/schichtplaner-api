@@ -49,33 +49,33 @@ class TestData(
         val kabarett = PlanEntity("Kabarett 2021")
         planRepository.saveAll(listOf(konzert, vtf, kabarett))
 
-        val konzertEntrance = ProductionEntity("Einlass", konzert)
-        val konzertDrinks = ProductionEntity("Getränke", konzert)
-        val vtfDrinks = ProductionEntity("Getränke", vtf)
-        val vtfFries = ProductionEntity("Pommes", vtf)
-        val vtfBeer = ProductionEntity("Bier", vtf)
-        val kabarettEntrance = ProductionEntity("Einlass", kabarett)
+        val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)
+        val konzertDrinks = ProductionEntity(name = "Getränke", plan = konzert)
+        val vtfDrinks = ProductionEntity(name = "Getränke", plan = vtf)
+        val vtfFries = ProductionEntity(name = "Pommes", plan = vtf)
+        val vtfBeer = ProductionEntity(name = "Bier", plan = vtf)
+        val kabarettEntrance = ProductionEntity(name = "Einlass", plan = kabarett)
         productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, vtfBeer, kabarettEntrance))
 
-        val konzertEntranceShift = ShiftEntity(parse("19:00"), parse("20:30"), konzertEntrance)
+        val konzertEntranceShift = ShiftEntity(startTime = parse("19:00"), endTime = parse("20:30"), production = konzertEntrance)
             .apply { workers.add(gretaLiebert) }
-        val vtfDrinksShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfDrinks)
+        val vtfDrinksShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfDrinks)
             .apply { workers.add(mariusReich) }
-        val vtfDrinksShift2 = ShiftEntity(parse("14:00"), parse("18:30"), vtfDrinks)
+        val vtfDrinksShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfDrinks)
             .apply { workers.add(mikeEggert) }
-        val vtfDrinksShift3 = ShiftEntity(parse("18:30"), parse("23:45"), vtfDrinks)
+        val vtfDrinksShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfDrinks)
             .apply { workers.addAll(listOf(mikeEggert, edeltraudBaar)) }
-        val vtfFriesShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfFries)
-        val vtfFriesShift2 = ShiftEntity(parse("14:00"), parse("18:30"), vtfFries)
+        val vtfFriesShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfFries)
+        val vtfFriesShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfFries)
             .apply { workers.addAll(listOf(robinSigmund, sabineHarst)) }
-        val vtfFriesShift3 = ShiftEntity(parse("18:30"), parse("23:45"), vtfFries)
-        val vtfBeerShift1 = ShiftEntity(parse("09:30"), parse("14:00"), vtfBeer)
-        val vtfBeerShift2 = ShiftEntity(parse("11:00"), parse("15:30"), vtfBeer)
-        val vtfBeerShift3 = ShiftEntity(parse("12:00"), parse("16:30"), vtfBeer)
-        val vtfBeerShift4 = ShiftEntity(parse("14:00"), parse("18:30"), vtfBeer)
-        val vtfBeerShift5 = ShiftEntity(parse("15:30"), parse("20:00"), vtfBeer)
-        val vtfBeerShift6 = ShiftEntity(parse("16:30"), parse("21:00"), vtfBeer)
-        val vtfBeerShift7 = ShiftEntity(parse("18:30"), parse("23:45"), vtfBeer)
+        val vtfFriesShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfFries)
+        val vtfBeerShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfBeer)
+        val vtfBeerShift2 = ShiftEntity(startTime = parse("11:00"), endTime = parse("15:30"), production = vtfBeer)
+        val vtfBeerShift3 = ShiftEntity(startTime = parse("12:00"), endTime = parse("16:30"), production = vtfBeer)
+        val vtfBeerShift4 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfBeer)
+        val vtfBeerShift5 = ShiftEntity(startTime = parse("15:30"), endTime = parse("20:00"), production = vtfBeer)
+        val vtfBeerShift6 = ShiftEntity(startTime = parse("16:30"), endTime = parse("21:00"), production = vtfBeer)
+        val vtfBeerShift7 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfBeer)
         shiftRepository.saveAll(
             listOf(
                 konzertEntranceShift,

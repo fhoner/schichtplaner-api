@@ -1,0 +1,11 @@
+spring:
+    jpa:
+        properties:
+            hibernate:
+                default_schema: ""
+                use-new-id-generator-mappings: false
+        hibernate:
+            ddl-auto: create-drop
+        database: H2
+    flyway:
+        enabled: false

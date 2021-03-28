@@ -1,22 +1,17 @@
 package com.felixhoner.schichtplaner.api.persistence.entity
 
+import jakarta.validation.constraints.NotNull
 import java.time.LocalTime
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-import javax.validation.constraints.NotNull
+import javax.persistence.*
 
 @Entity
 @Table(name = "shift")
-class ShiftEntity(
+data class ShiftEntity(
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
     @NotNull
     val startTime: LocalTime,
@@ -25,18 +20,12 @@ class ShiftEntity(
     val endTime: LocalTime,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val production: ProductionEntity,
-) {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val production: ProductionEntity? = null,
 
     @Column(unique = true)
-    val uuid: UUID = UUID.randomUUID()
+    val uuid: UUID = UUID.randomUUID(),
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "shift_worker")
     val workers: MutableList<WorkerEntity> = mutableListOf()
-
-}
+)
