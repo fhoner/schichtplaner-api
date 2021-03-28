@@ -19,7 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import java.time.LocalTime
+import java.time.LocalTime.parse
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -74,20 +74,20 @@ class GraphQLSysTest {
         val kabarett = PlanEntity("Kabarett 2021")
         planRepository.saveAll(listOf(konzert, vtf, kabarett))
 
-        val konzertEntrance = ProductionEntity("Einlass", konzert)
-        val konzertDrinks = ProductionEntity("Getränke", konzert)
-        val vtfDrinks = ProductionEntity("Getränke", vtf)
-        val vtfFries = ProductionEntity("Pommes", vtf)
-        val kabarettEntrance = ProductionEntity("Einlass", kabarett)
+        val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)
+        val konzertDrinks = ProductionEntity(name = "Getränke", plan = konzert)
+        val vtfDrinks = ProductionEntity(name = "Getränke", plan = vtf)
+        val vtfFries = ProductionEntity(name = "Pommes", plan = vtf)
+        val kabarettEntrance = ProductionEntity(name = "Einlass", plan = kabarett)
         productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, kabarettEntrance))
 
-        val konzertEntranceShift = ShiftEntity(LocalTime.parse("19:00"), LocalTime.parse("20:15"), konzertEntrance)
-        val vtfDrinksShift1 = ShiftEntity(LocalTime.parse("09:30"), LocalTime.parse("14:00"), vtfDrinks)
-        val vtfDrinksShift2 = ShiftEntity(LocalTime.parse("14:00"), LocalTime.parse("18:30"), vtfDrinks)
-        val vtfDrinksShift3 = ShiftEntity(LocalTime.parse("18:30"), LocalTime.parse("23:45"), vtfDrinks)
-        val vtfFriesShift1 = ShiftEntity(LocalTime.parse("09:30"), LocalTime.parse("14:00"), vtfFries)
-        val vtfFriesShift2 = ShiftEntity(LocalTime.parse("14:00"), LocalTime.parse("18:30"), vtfFries)
-        val vtfFriesShift3 = ShiftEntity(LocalTime.parse("18:30"), LocalTime.parse("23:45"), vtfFries)
+        val konzertEntranceShift = ShiftEntity(startTime = parse("19:00"), endTime = parse("20:15"), production = konzertEntrance)
+        val vtfDrinksShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfDrinks)
+        val vtfDrinksShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfDrinks)
+        val vtfDrinksShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfDrinks)
+        val vtfFriesShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfFries)
+        val vtfFriesShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfFries)
+        val vtfFriesShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfFries)
         shiftRepository.saveAll(
             listOf(
                 konzertEntranceShift, vtfDrinksShift1, vtfDrinksShift2, vtfDrinksShift3, vtfFriesShift1,

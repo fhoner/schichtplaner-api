@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 class SchichtplanerBackend {
 
     @Bean
+    fun objectMapper(): ObjectMapper = ObjectMapper().registerModules()
+
+    @Bean
     fun dataFetcherFactoryProvider(
         objectMapper: ObjectMapper,
         applicationContext: ApplicationContext,

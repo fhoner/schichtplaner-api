@@ -1,5 +1,6 @@
 package com.felixhoner.schichtplaner.api.business.service
 
+import com.felixhoner.schichtplaner.api.business.exception.DuplicateShiftTimeException
 import com.felixhoner.schichtplaner.api.business.model.Shift
 import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
 import com.felixhoner.schichtplaner.api.persistence.repository.ProductionRepository
@@ -19,7 +20,7 @@ class ShiftService(
         val all = shiftRepository.findAllByProductionIds(productionIds)
         return productionIds.map { productionId ->
             all
-                .filter { shift -> productionId == shift.production.id }
+                .filter { shift -> productionId == shift.production?.id }
                 .map(transformer::toBo)
         }
     }
@@ -28,8 +29,9 @@ class ShiftService(
         val production = productionRepository.findByUuid(productionUuid) ?: throw RuntimeException("NOT FOUND")
         val startLt = LocalTime.parse(startTime)
         val endLt = LocalTime.parse(endTime)
-        getByProduction(production.id!!).find { it.startTime == startLt && it.endTime == endLt }
-            ?.apply { throw RuntimeException("The production already contains a shift [$startTime, $endTime]") }
+        if (production.shifts.any { it.startTime == startLt && it.endTime == endLt }) {
+            throw DuplicateShiftTimeException("The production already contains a shift with [startTime, endTime] = [$startTime, $endTime]")
+        }
         val newShift = ShiftEntity(
             startTime = startLt,
             endTime = endLt,
@@ -38,8 +40,5 @@ class ShiftService(
         return shiftRepository.save(newShift)
             .let(transformer::toBo)
     }
-
-    private fun getByProduction(productionId: Long): List<ShiftEntity> =
-        this.shiftRepository.findAllByProductionIds(listOf(productionId))
 
 }

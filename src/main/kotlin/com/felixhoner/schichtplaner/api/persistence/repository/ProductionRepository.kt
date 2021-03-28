@@ -9,9 +9,12 @@ import java.util.*
 @Repository
 interface ProductionRepository : CrudRepository<ProductionEntity, Long> {
 
+    /** Gets all plans whose id is in the parameter list. */
     @Query("select p from ProductionEntity p where p.plan.id in :planIds")
     fun findAllByPlanIds(planIds: List<Long>): List<ProductionEntity>
 
-    fun findByUuid(planUuid: UUID): ProductionEntity?
+    /** Gets the production by its uuid if one exists. Shifts will be fetched along ordered by their startTime. */
+    @Query("select p from ProductionEntity p left join fetch p.shifts s where p.uuid = :productionUuid order by s.startTime")
+    fun findByUuid(productionUuid: UUID): ProductionEntity?
 
 }

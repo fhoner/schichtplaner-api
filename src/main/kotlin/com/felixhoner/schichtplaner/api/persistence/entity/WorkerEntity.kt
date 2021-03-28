@@ -1,5 +1,7 @@
 package com.felixhoner.schichtplaner.api.persistence.entity
 
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -9,8 +11,6 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.ManyToMany
 import javax.persistence.Table
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "worker")
