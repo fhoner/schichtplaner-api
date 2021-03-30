@@ -18,10 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalTime.parse
 
-@ExtendWith(value = [SpringExtension::class])
-@DataJpaTest
 @DatabaseTest
-@AutoConfigureTestDatabase
 class ProductionRepositoryTest {
 
     @Autowired
