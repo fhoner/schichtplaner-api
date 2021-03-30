@@ -5,7 +5,10 @@ spring:
                 default_schema: ""
                 use-new-id-generator-mappings: false
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: create
         database: H2
+        show-sql: false
     flyway:
         enabled: false
+logging:
+    register-shutdown-hook: true

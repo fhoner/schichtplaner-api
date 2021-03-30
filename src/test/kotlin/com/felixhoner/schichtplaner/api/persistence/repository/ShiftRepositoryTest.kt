@@ -3,11 +3,14 @@ package com.felixhoner.schichtplaner.api.persistence.repository
 import com.felixhoner.schichtplaner.api.persistence.entity.PlanEntity
 import com.felixhoner.schichtplaner.api.persistence.entity.ProductionEntity
 import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
+import com.felixhoner.schichtplaner.api.util.DatabaseTest
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -17,9 +20,7 @@ import org.testcontainers.junit.jupiter.Container
 import java.time.LocalTime.parse
 import javax.transaction.Transactional
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(SpringExtension::class)
-@Transactional
+@DatabaseTest
 class ShiftRepositoryTest {
 
     @Autowired
@@ -63,19 +64,6 @@ class ShiftRepositoryTest {
         val result = shiftRepository.findAllByProductionIds(queried.map { it.production?.id!! })
         result shouldHaveSize 4
         result.map { Pair(it.startTime, it.endTime) } shouldContainExactlyInAnyOrder queried.map { Pair(it.startTime, it.endTime) }
-    }
-
-    companion object {
-        @Container
-        val container = PostgreSQLContainer<Nothing>("postgres:13").apply { start() }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", container::getJdbcUrl)
-            registry.add("spring.datasource.password", container::getPassword)
-            registry.add("spring.datasource.username", container::getUsername)
-        }
     }
 
 }

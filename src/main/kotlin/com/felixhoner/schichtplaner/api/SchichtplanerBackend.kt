@@ -1,6 +1,7 @@
 package com.felixhoner.schichtplaner.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.felixhoner.schichtplaner.api.graphql.errorhandling.CustomDataFetcherExceptionHandler
 import com.felixhoner.schichtplaner.api.graphql.execution.CustomDataFetcherFactoryProvider
 import graphql.execution.DataFetcherExceptionHandler
@@ -16,7 +17,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 class SchichtplanerBackend {
 
     @Bean
-    fun objectMapper(): ObjectMapper = ObjectMapper().registerModules()
+    fun objectMapper(): ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     @Bean
     fun dataFetcherFactoryProvider(
