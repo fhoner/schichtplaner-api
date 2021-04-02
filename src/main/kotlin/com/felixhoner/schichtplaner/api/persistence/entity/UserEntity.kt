@@ -32,18 +32,18 @@ enum class UserRole {
 @Entity
 @Table(name = "user_account")
 class UserEntity(
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+
+    @Column(unique = true)
+    val uuid: UUID = UUID.randomUUID(),
+
     @Email
     val email: String,
     val password: String,
 
     @Enumerated(EnumType.STRING)
     val role: UserRole
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-
-    @Column(unique = true)
-    val uuid: UUID = UUID.randomUUID()
-
-}
+)

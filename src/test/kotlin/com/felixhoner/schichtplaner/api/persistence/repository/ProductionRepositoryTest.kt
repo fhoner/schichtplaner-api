@@ -30,9 +30,9 @@ class ProductionRepositoryTest {
     @Autowired
     lateinit var shiftRepository: ShiftRepository
 
-    private val konzert = PlanEntity("Konzert 2021")
-    private val vtf = PlanEntity("Vatertagsfest 2021")
-    private val kabarett = PlanEntity("Kabarett 2021")
+    private val konzert = PlanEntity(name = "Konzert 2021")
+    private val vtf = PlanEntity(name = "Vatertagsfest 2021")
+    private val kabarett = PlanEntity(name = "Kabarett 2021")
 
     private val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)
     private val konzertDrinks = ProductionEntity(name = "Getränke", plan = konzert)

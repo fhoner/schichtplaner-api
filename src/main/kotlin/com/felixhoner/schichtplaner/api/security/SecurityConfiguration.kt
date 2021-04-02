@@ -1,5 +1,6 @@
 package com.felixhoner.schichtplaner.api.security
 
+import com.felixhoner.schichtplaner.api.business.exception.InvalidTokenException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -78,5 +79,3 @@ class SecurityConfiguration {
             .build()
     }
 }
-
-class InvalidTokenException : Exception()

@@ -69,9 +69,9 @@ class GraphQLSysTest {
     }
 
     fun insertData() {
-        val konzert = PlanEntity("Konzert 2021")
-        val vtf = PlanEntity("Vatertagsfest 2021")
-        val kabarett = PlanEntity("Kabarett 2021")
+        val konzert = PlanEntity(name = "Konzert 2021")
+        val vtf = PlanEntity(name = "Vatertagsfest 2021")
+        val kabarett = PlanEntity(name = "Kabarett 2021")
         planRepository.saveAll(listOf(konzert, vtf, kabarett))
 
         val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)

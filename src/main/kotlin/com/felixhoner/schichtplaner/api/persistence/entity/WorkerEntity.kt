@@ -16,6 +16,13 @@ import javax.persistence.Table
 @Table(name = "worker")
 class WorkerEntity(
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+
+    @Column(unique = true)
+    val uuid: UUID = UUID.randomUUID(),
+
     @NotBlank
     val firstname: String,
 
@@ -23,18 +30,9 @@ class WorkerEntity(
     val lastname: String,
 
     @Email
-    val email: String
-
-) {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-
-    @Column(unique = true)
-    val uuid: UUID = UUID.randomUUID()
+    val email: String,
 
     @ManyToMany(mappedBy = "workers", fetch = FetchType.LAZY)
     val shifts: MutableList<ShiftEntity> = mutableListOf()
 
-}
+)

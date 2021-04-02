@@ -7,18 +7,8 @@ import com.felixhoner.schichtplaner.api.util.DatabaseTest
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
 import java.time.LocalTime.parse
-import javax.transaction.Transactional
 
 @DatabaseTest
 class ShiftRepositoryTest {
@@ -34,9 +24,9 @@ class ShiftRepositoryTest {
 
     @Test
     fun `should find by plans`() {
-        val konzert = PlanEntity("Konzert 2021")
-        val vtf = PlanEntity("Vatertagsfest 2021")
-        val kabarett = PlanEntity("Kabarett 2021")
+        val konzert = PlanEntity(name = "Konzert 2021")
+        val vtf = PlanEntity(name = "Vatertagsfest 2021")
+        val kabarett = PlanEntity(name = "Kabarett 2021")
         planRepository.saveAll(listOf(konzert, vtf, kabarett))
 
         val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)

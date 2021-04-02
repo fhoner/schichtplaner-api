@@ -8,14 +8,14 @@ import jakarta.validation.constraints.NotBlank
 @Entity
 @Table(name = "plan")
 class PlanEntity(
-    @NotBlank
-    val name: String,
-) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long? = null,
+
+    @NotBlank
+    val name: String,
 
     @Column(unique = true)
     val uuid: UUID = UUID.randomUUID()
-}
+)

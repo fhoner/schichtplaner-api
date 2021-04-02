@@ -8,6 +8,7 @@ import com.felixhoner.schichtplaner.api.graphql.dto.UserDto
 import com.felixhoner.schichtplaner.api.graphql.dto.UserRoleDto
 import com.felixhoner.schichtplaner.api.security.JwtSigner
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 
 data class LoginResponse(
     val accessToken: String,
@@ -23,9 +24,10 @@ class UserMutation(
 ) : Mutation {
 
     @Authorized("WRITER")
-    fun createUser(email: String, password: String, role: UserRoleDto): UserDto {
+    fun createUser(email: String, password: String, role: UserRoleDto): CompletableFuture<UserDto> {
         return userService.createUser(email, password, role)
-            .let { transformer.toDto(it) }
+            .map { transformer.toDto(it) }
+            .toFuture()
     }
 
 }

@@ -32,6 +32,7 @@ dependencies {
     implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testImplementation("io.projectreactor:reactor-test:$reactorTestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestAssertionsVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.h2database:h2:$h2dbVersion")
@@ -68,5 +69,14 @@ tasks.withType<Test> {
             showCauses = true
             showStackTraces = true
         }
+
+        afterSuite(KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
+            if (desc.parent == null) {
+                println(
+                    "\n${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} " +
+                            "successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                )
+            }
+        }))
     }
 }

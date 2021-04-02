@@ -1,5 +1,6 @@
 package com.felixhoner.schichtplaner.api.security
 
+import com.felixhoner.schichtplaner.api.business.exception.InvalidTokenException
 import mu.KotlinLogging
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
 import org.springframework.context.annotation.Configuration

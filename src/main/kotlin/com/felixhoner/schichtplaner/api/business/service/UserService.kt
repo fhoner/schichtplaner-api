@@ -3,6 +3,7 @@ package com.felixhoner.schichtplaner.api.business.service
 import com.felixhoner.schichtplaner.api.business.exception.InvalidCredentialsException
 import com.felixhoner.schichtplaner.api.business.exception.InvalidRefreshTargetException
 import com.felixhoner.schichtplaner.api.business.exception.InvalidTokenException
+import com.felixhoner.schichtplaner.api.business.exception.NotFoundException
 import com.felixhoner.schichtplaner.api.business.model.User
 import com.felixhoner.schichtplaner.api.graphql.dto.UserRoleDto
 import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
@@ -44,7 +45,7 @@ class UserService(
     fun getUserByEmail(email: String): Mono<User> {
         return userRepository.findByEmail(email)
             ?.let(transformer::toBo)
-            ?.let { Mono.just(it) } ?: Mono.error(RuntimeException("User with email $email not found"))
+            ?.let { Mono.just(it) } ?: Mono.error(NotFoundException("User with email $email not found"))
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -66,13 +67,14 @@ class UserService(
         Mono.error(InvalidTokenException())
     }
 
-    fun createUser(username: String, password: String, role: UserRoleDto): User {
-        val userEntity = UserEntity(
+    fun createUser(username: String, password: String, role: UserRoleDto): Mono<User> =
+        UserEntity(
             email = username,
             password = passwordEncoder.encode(password),
             role = transformer.toBo(role)
         )
-        userRepository.save(userEntity)
-        return userEntity.let(transformer::toBo)
-    }
+            .let { userRepository.save(it) }
+            .let { transformer.toBo(it) }
+            .let { Mono.just(it) }
+
 }
