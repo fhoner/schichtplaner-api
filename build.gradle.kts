@@ -31,10 +31,13 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion") {
+        exclude(module = "mockito-core")
+    }
     testImplementation("io.projectreactor:reactor-test:$reactorTestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestAssertionsVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("com.ninja-squad:springmockk:$mockkBeanVersion")
     testImplementation("com.h2database:h2:$h2dbVersion")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")

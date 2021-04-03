@@ -21,14 +21,21 @@ data class LoginRequest(
     val password: String
 )
 
+/**
+ * REST controller to issue httpOnly cookies. This should be used by webclients
+ * so that refresh and access tokens are not leaked by potential XSS vulnerabilities.
+ * The cookies do not have a max-age but the tokens itself have, as they both are jwt
+ * which are validated server side every time.
+ */
 @RestController
 @RequestMapping("/auth")
 class AuthController(
     private val userService: UserService
 ) {
 
+    /** Creates both refresh and access tokens and responds set-cookie headers properly. */
     @PostMapping("/login")
-    fun createToken(@RequestBody request: LoginRequest, response: ServerHttpResponse): Mono<Void> {
+    fun createAccessAndRefreshToken(@RequestBody request: LoginRequest, response: ServerHttpResponse): Mono<Void> {
         return userService.login(request.email, request.password)
             .map {
                 LoginResponse(
@@ -50,6 +57,7 @@ class AuthController(
             }
     }
 
+    /** To remove the cookies on the client, the cookies are set to blanks with max-age to expire immediately. */
     @PostMapping("/logout")
     fun logout(response: ServerHttpResponse): Mono<Void> {
         response.addCookie(
@@ -71,13 +79,18 @@ class AuthController(
         return Mono.empty()
     }
 
+    /**
+     * Used to get a new access or refresh token. For security reasons, the access
+     * token expires rather soon, so call the endpoint to retrieve a new one using
+     * a still valid refresh token.
+     */
     @PostMapping("/refresh")
     fun refreshToken(
-        @CookieValue(name = "refresh_token") token: String,
+        @CookieValue(name = "refresh_token") refreshToken: String,
         @RequestParam target: TokenType,
         response: ServerHttpResponse
     ): Mono<Void> {
-        return userService.refreshToken(token, target)
+        return userService.refreshToken(refreshToken, target)
             .doOnNext {
                 when (target) {
                     ACCESS -> response.addCookie(createCookie("access_token", it, "/api/graphql"))
