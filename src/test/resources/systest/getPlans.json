@@ -1,0 +1,72 @@
+{
+    "data": {
+        "getPlans": [
+            {
+                "name": "Konzert 2021",
+                "productions": [
+                    {
+                        "name": "Einlass",
+                        "shifts": [
+                            {
+                                "startTime": "19:00",
+                                "endTime": "20:15"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Getränke",
+                        "shifts": []
+                    }
+                ]
+            },
+            {
+                "name": "Vatertagsfest 2021",
+                "productions": [
+                    {
+                        "name": "Getränke",
+                        "shifts": [
+                            {
+                                "startTime": "09:30",
+                                "endTime": "14:00"
+                            },
+                            {
+                                "startTime": "14:00",
+                                "endTime": "18:30"
+                            },
+                            {
+                                "startTime": "18:30",
+                                "endTime": "23:45"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Pommes",
+                        "shifts": [
+                            {
+                                "startTime": "09:30",
+                                "endTime": "14:00"
+                            },
+                            {
+                                "startTime": "14:00",
+                                "endTime": "18:30"
+                            },
+                            {
+                                "startTime": "18:30",
+                                "endTime": "23:45"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Kabarett 2021",
+                "productions": [
+                    {
+                        "name": "Einlass",
+                        "shifts": []
+                    }
+                ]
+            }
+        ]
+    }
+}

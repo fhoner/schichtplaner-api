@@ -7,7 +7,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
 
 @Configuration
-@Profile(value = ["integration-test", "system-test"])
+@Profile(value = ["integration-test"])
 class SecurityTestConfiguration {
 
     @Bean

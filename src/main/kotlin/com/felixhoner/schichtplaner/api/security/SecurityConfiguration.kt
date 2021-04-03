@@ -17,7 +17,7 @@ import org.springframework.security.web.server.authentication.ServerAuthenticati
 import reactor.core.publisher.Mono
 
 @Configuration
-@Profile(value = ["local", "production"])
+@Profile(value = ["local", "production", "system-test"])
 class SecurityConfiguration {
 
     @Bean

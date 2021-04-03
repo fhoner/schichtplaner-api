@@ -1,33 +1,27 @@
-package com.felixhoner.schichtplaner.api
+package com.felixhoner.schichtplaner.api.systemtest
 
+import com.felixhoner.schichtplaner.api.GRAPHQL_ENDPOINT
+import com.felixhoner.schichtplaner.api.GRAPHQL_MEDIA_TYPE
 import com.felixhoner.schichtplaner.api.persistence.entity.PlanEntity
 import com.felixhoner.schichtplaner.api.persistence.entity.ProductionEntity
 import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
+import com.felixhoner.schichtplaner.api.persistence.entity.UserRole
 import com.felixhoner.schichtplaner.api.persistence.repository.PlanRepository
 import com.felixhoner.schichtplaner.api.persistence.repository.ProductionRepository
 import com.felixhoner.schichtplaner.api.persistence.repository.ShiftRepository
+import com.felixhoner.schichtplaner.api.persistence.repository.UserRepository
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.LocalTime.parse
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension::class)
-@Testcontainers
-@ActiveProfiles("system-test")
-class GraphQLSysTest {
+class GraphQLSysTest : BaseSystemTest() {
 
     @Autowired
     lateinit var planRepository: PlanRepository
@@ -39,7 +33,10 @@ class GraphQLSysTest {
     lateinit var shiftRepository: ShiftRepository
 
     @Autowired
-    lateinit var testClient: WebTestClient
+    lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var passwordEncoder: BCryptPasswordEncoder
 
     @Test
     fun `should return correct json`() {
@@ -62,12 +59,19 @@ class GraphQLSysTest {
             .replace("\t", " ")
             .replace(" +".toRegex(), " ")
 
+        val (accessToken, refreshToken) = super.doSuccessfulLogin()
+
         testClient.post()
             .uri(GRAPHQL_ENDPOINT)
             .accept(APPLICATION_JSON)
             .contentType(GRAPHQL_MEDIA_TYPE)
+            .cookie("access_token", accessToken)
             .bodyValue(query)
             .exchange()
+            .expectBody()
+            .jsonPath("$.errors").doesNotExist()
+            .jsonPath("$.data.getPlans").isArray
+            .json(fileContents("getPlans"))
     }
 
     fun insertData() {
@@ -96,6 +100,9 @@ class GraphQLSysTest {
                 vtfFriesShift2, vtfFriesShift3
             )
         )
+
+        val felix = UserEntity(email = "felix.honer@novatec-gmbh.de", password = passwordEncoder.encode("felix"), role = UserRole.READER)
+        userRepository.save(felix)
     }
 
     companion object {
