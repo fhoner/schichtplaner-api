@@ -18,7 +18,6 @@ class DataLoaderConfiguration(
     fun dataLoaderRegistryFactory(): DataLoaderRegistryFactory {
         return object : DataLoaderRegistryFactory {
             override fun generate(): DataLoaderRegistry = DataLoaderRegistry().apply {
-                println(registeredDataLoaders.size)
                 register("productionLoader", getLoader<Long, List<ProductionDto>>("productionLoader"))
                 register("shiftLoader", getLoader<Long, List<ShiftDto>>("shiftLoader"))
                 register("workerLoader", getLoader<Long, List<WorkerDto>>("workerLoader"))

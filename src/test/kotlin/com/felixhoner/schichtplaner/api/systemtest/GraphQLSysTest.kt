@@ -2,45 +2,21 @@ package com.felixhoner.schichtplaner.api.systemtest
 
 import com.felixhoner.schichtplaner.api.GRAPHQL_ENDPOINT
 import com.felixhoner.schichtplaner.api.GRAPHQL_MEDIA_TYPE
-import com.felixhoner.schichtplaner.api.persistence.entity.PlanEntity
-import com.felixhoner.schichtplaner.api.persistence.entity.ProductionEntity
-import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
-import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
-import com.felixhoner.schichtplaner.api.persistence.entity.UserRole
-import com.felixhoner.schichtplaner.api.persistence.repository.PlanRepository
-import com.felixhoner.schichtplaner.api.persistence.repository.ProductionRepository
-import com.felixhoner.schichtplaner.api.persistence.repository.ShiftRepository
-import com.felixhoner.schichtplaner.api.persistence.repository.UserRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
-import java.time.LocalTime.parse
+import java.util.*
 
 class GraphQLSysTest : BaseSystemTest() {
 
-    @Autowired
-    lateinit var planRepository: PlanRepository
-
-    @Autowired
-    lateinit var productionRepository: ProductionRepository
-
-    @Autowired
-    lateinit var shiftRepository: ShiftRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var passwordEncoder: BCryptPasswordEncoder
+    @BeforeEach
+    fun setup() {
+        clearData()
+        prepareData()
+    }
 
     @Test
-    fun `should return correct json`() {
-        insertData()
+    fun `should return plans successfully`() {
         val query = """
 			query {
 			  getPlans {
@@ -59,7 +35,7 @@ class GraphQLSysTest : BaseSystemTest() {
             .replace("\t", " ")
             .replace(" +".toRegex(), " ")
 
-        val (accessToken, refreshToken) = super.doSuccessfulLogin()
+        val (accessToken, _) = super.doSuccessfulLogin()
 
         testClient.post()
             .uri(GRAPHQL_ENDPOINT)
@@ -74,47 +50,33 @@ class GraphQLSysTest : BaseSystemTest() {
             .json(fileContents("getPlans"))
     }
 
-    fun insertData() {
-        val konzert = PlanEntity(name = "Konzert 2021")
-        val vtf = PlanEntity(name = "Vatertagsfest 2021")
-        val kabarett = PlanEntity(name = "Kabarett 2021")
-        planRepository.saveAll(listOf(konzert, vtf, kabarett))
-
-        val konzertEntrance = ProductionEntity(name = "Einlass", plan = konzert)
-        val konzertDrinks = ProductionEntity(name = "Getränke", plan = konzert)
-        val vtfDrinks = ProductionEntity(name = "Getränke", plan = vtf)
-        val vtfFries = ProductionEntity(name = "Pommes", plan = vtf)
-        val kabarettEntrance = ProductionEntity(name = "Einlass", plan = kabarett)
-        productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, kabarettEntrance))
-
-        val konzertEntranceShift = ShiftEntity(startTime = parse("19:00"), endTime = parse("20:15"), production = konzertEntrance)
-        val vtfDrinksShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfDrinks)
-        val vtfDrinksShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfDrinks)
-        val vtfDrinksShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfDrinks)
-        val vtfFriesShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfFries)
-        val vtfFriesShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfFries)
-        val vtfFriesShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfFries)
-        shiftRepository.saveAll(
-            listOf(
-                konzertEntranceShift, vtfDrinksShift1, vtfDrinksShift2, vtfDrinksShift3, vtfFriesShift1,
-                vtfFriesShift2, vtfFriesShift3
+    @Test
+    fun `should deny creating shift with insufficient permissions`() {
+        val request = mapOf(
+            "query" to """
+                        mutation { 
+                            createShift(productionUuid: "${UUID.randomUUID()}", startTime: "12:00", endTime: "14:00") {
+                                uuid   
+                            } 
+                        }
+                       """.trimIndent(),
+            "variables" to mapOf(
+                "productionUuid" to 4711,
+                "startTime" to "12:00",
+                "endTime" to "14:00"
             )
         )
 
-        val felix = UserEntity(email = "felix.honer@novatec-gmbh.de", password = passwordEncoder.encode("felix"), role = UserRole.READER)
-        userRepository.save(felix)
-    }
+        val (accessToken, _) = super.doSuccessfulLogin()
 
-    companion object {
-        @Container
-        val container = PostgreSQLContainer<Nothing>("postgres:13").apply { start() }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", container::getJdbcUrl)
-            registry.add("spring.datasource.password", container::getPassword)
-            registry.add("spring.datasource.username", container::getUsername)
-        }
+        testClient.post()
+            .uri(GRAPHQL_ENDPOINT)
+            .accept(APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
+            .cookie("access_token", accessToken)
+            .bodyValue(request)
+            .exchange()
+            .expectBody()
+            .jsonPath("$.errors[0].message", "Exception while fetching data (createShift) : Role(s) ADMIN required")
     }
 }

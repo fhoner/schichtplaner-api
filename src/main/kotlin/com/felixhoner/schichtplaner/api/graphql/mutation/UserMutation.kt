@@ -23,7 +23,7 @@ class UserMutation(
     private val transformer: TransformerDto
 ) : Mutation {
 
-    @Authorized("WRITER")
+    @Authorized("ADMIN")
     fun createUser(email: String, password: String, role: UserRoleDto): CompletableFuture<UserDto> {
         return userService.createUser(email, password, role)
             .map { transformer.toDto(it) }
