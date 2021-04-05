@@ -42,7 +42,7 @@ class WorkerServiceTest {
         every { transformer.toBo(workerEntities[0]) } returns workerBos[0]
         every { transformer.toBo(workerEntities[1]) } returns workerBos[1]
 
-        val result = cut.findAllByShift(listOf(1, 2, 3))
+        val result = cut.getAllByShift(listOf(1, 2, 3))
         result shouldHaveSize 2
         result shouldContainExactlyInAnyOrder workerBos
         verify { transformer.toBo(workerEntities[0]) }

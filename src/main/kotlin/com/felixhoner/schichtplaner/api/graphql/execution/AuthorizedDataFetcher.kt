@@ -29,7 +29,7 @@ class AuthorizedDataFetcher(
             .filter { it.isGranted }
             .map { createResult(originalDataFetcher.get(environment)!!) }
             .switchIfEmpty(Mono.just(createGraphQLError(environment)))
-            .toFuture() // FIXME: how to avoid .block() also not allowed
+            .toFuture()
     }
 
     private fun checkRoles(securityContext: Mono<SecurityContext>): Mono<AuthorizationDecision> {

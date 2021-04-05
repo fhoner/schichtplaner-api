@@ -10,5 +10,5 @@ class WorkerService(
     private val transformer: TransformerBo,
 ) {
 
-    fun findAllByShift(shiftIds: List<Long>): List<Worker> = workerRepository.findAllByShiftIds(shiftIds).map(transformer::toBo)
+    fun getAllByShift(shiftIds: List<Long>): List<Worker> = workerRepository.findAllByShiftIds(shiftIds).map(transformer::toBo)
 }
