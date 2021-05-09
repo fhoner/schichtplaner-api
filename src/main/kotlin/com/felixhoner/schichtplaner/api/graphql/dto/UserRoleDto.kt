@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
-import com.expediagroup.graphql.annotations.GraphQLName
+import com.expediagroup.graphql.generator.annotations.GraphQLName
 
 @GraphQLName("UserRole")
 enum class UserRoleDto {

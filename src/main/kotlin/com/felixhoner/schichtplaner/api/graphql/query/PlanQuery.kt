@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.query
 
-import com.expediagroup.graphql.spring.operations.Query
+import com.expediagroup.graphql.server.operations.Query
 import com.felixhoner.schichtplaner.api.business.service.PlanService
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import com.felixhoner.schichtplaner.api.graphql.dto.PlanDto

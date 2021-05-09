@@ -1,7 +1,7 @@
 package com.felixhoner.schichtplaner.api.graphql.execution
 
-import com.expediagroup.graphql.execution.SimpleKotlinDataFetcherFactoryProvider
-import com.expediagroup.graphql.extensions.deepName
+import com.expediagroup.graphql.generator.execution.SimpleKotlinDataFetcherFactoryProvider
+import com.expediagroup.graphql.generator.extensions.deepName
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import graphql.schema.DataFetcher

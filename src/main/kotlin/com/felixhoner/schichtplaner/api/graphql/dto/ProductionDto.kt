@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
-import com.expediagroup.graphql.annotations.GraphQLIgnore
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope

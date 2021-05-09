@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.mutation
 
-import com.expediagroup.graphql.spring.operations.Mutation
+import com.expediagroup.graphql.server.operations.Mutation
 import com.felixhoner.schichtplaner.api.business.service.UserService
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import com.felixhoner.schichtplaner.api.graphql.dto.TransformerDto

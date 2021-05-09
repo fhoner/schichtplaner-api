@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.execution
 
-import com.expediagroup.graphql.spring.exception.SimpleKotlinGraphQLError
+import graphql.GraphqlErrorException
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
@@ -20,7 +20,7 @@ class AuthorizedDataFetcher(
             return originalDataFetcher.get(environment)!!
         }
 
-        val context: GraphQLSecurityContext? = environment.getContext<GraphQLSecurityContext>()
+        val context: GraphQLSecurityContext? = environment.getContext()
         val securityContext: Mono<SecurityContext> =
             context?.securityContext ?: throw RuntimeException("SecurityContext not present")
         val accessCheck = checkRoles(securityContext)
@@ -39,11 +39,11 @@ class AuthorizedDataFetcher(
     }
 
     private fun createGraphQLError(environment: DataFetchingEnvironment): DataFetcherResult<Any> {
-        val error = SimpleKotlinGraphQLError(
-            RuntimeException("Role(s) ${requiredRoles.joinToString(separator = ",")} required"),
-            listOf(environment.field.sourceLocation),
-            environment.executionStepInfo.path.toList()
-        )
+        val error = GraphqlErrorException.newErrorException()
+            .message("Role(s) ${requiredRoles.joinToString(separator = ",")} required")
+            .sourceLocation(environment.field.sourceLocation)
+            .path(environment.executionStepInfo.path.toList())
+            .build()
         return DataFetcherResult.newResult<Any>()
             .error(error)
             .build()

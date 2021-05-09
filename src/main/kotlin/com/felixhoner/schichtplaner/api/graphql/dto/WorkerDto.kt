@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.dto
 
-import com.expediagroup.graphql.annotations.GraphQLIgnore
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 
 data class WorkerDto(

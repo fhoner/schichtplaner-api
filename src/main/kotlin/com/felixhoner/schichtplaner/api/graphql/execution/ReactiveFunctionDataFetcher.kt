@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.execution
 
-import com.expediagroup.graphql.execution.FunctionDataFetcher
+import com.expediagroup.graphql.generator.execution.FunctionDataFetcher
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.schema.DataFetchingEnvironment
 import reactor.core.publisher.Mono

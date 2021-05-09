@@ -1,31 +1,29 @@
 package com.felixhoner.schichtplaner.api.graphql.execution
 
-import com.expediagroup.graphql.execution.GraphQLContext
-import com.expediagroup.graphql.spring.execution.GraphQLContextFactory
+import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContext
+import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContextFactory
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactor.ReactorContext
-import org.springframework.http.server.reactive.ServerHttpRequest
-import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.server.ServerRequest
 import reactor.core.publisher.Mono
-import kotlin.coroutines.coroutineContext
 
 class GraphQLSecurityContext(
-    val securityContext: Mono<SecurityContext>,
-    val response: ServerHttpResponse
-) : GraphQLContext
+    request: ServerRequest,
+    val securityContext: Mono<SecurityContext>
+) : SpringGraphQLContext(request)
 
-@Component
-class ReactiveSecurityContextFactory : GraphQLContextFactory<GraphQLSecurityContext> {
+class ReactiveSecurityContextFactory : SpringGraphQLContextFactory<GraphQLSecurityContext>() {
 
     @ExperimentalCoroutinesApi
-    override suspend fun generateContext(request: ServerHttpRequest, response: ServerHttpResponse): GraphQLSecurityContext {
+    override suspend fun generateContext(request: ServerRequest): GraphQLSecurityContext {
         val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("reactor context unavailable")
         val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(SecurityContext::class.java, Mono.empty())!!
         return GraphQLSecurityContext(
-            securityContext = securityContext,
-            response = response
+            request,
+            securityContext = securityContext
         )
     }
 }

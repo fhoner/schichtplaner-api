@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.graphql.query
 
-import com.expediagroup.graphql.spring.execution.DataLoaderRegistryFactory
+import com.expediagroup.graphql.server.execution.DataLoaderRegistryFactory
 import com.felixhoner.schichtplaner.api.graphql.dataloader.SchichtplanerDataLoader
 import com.felixhoner.schichtplaner.api.graphql.dto.ProductionDto
 import com.felixhoner.schichtplaner.api.graphql.dto.ShiftDto
