@@ -1,6 +1,7 @@
 const val springBootVersion = "2.5.1"
 const val kotlinVersion = "1.5.10"
 const val coroutinesVersion = "1.5.0"
+const val jaxbApi = "2.3.1"
 const val graphqlKotlinVersion = "4.1.1"
 const val kotlinLoggingVersion = "2.0.8"
 const val jjwtVersion = "0.11.2"

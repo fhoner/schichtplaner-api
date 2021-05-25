@@ -8,7 +8,7 @@ import com.felixhoner.schichtplaner.api.persistence.entity.ShiftEntity
 import com.felixhoner.schichtplaner.api.persistence.repository.ProductionRepository
 import com.felixhoner.schichtplaner.api.persistence.repository.ShiftRepository
 import org.springframework.stereotype.Component
-import java.time.LocalTime
+import java.time.Instant
 import java.util.*
 
 @Component
@@ -42,23 +42,18 @@ class ShiftService(
      * @throws NotFoundException Thrown if no production with [productionUuid] exists.
      * @throws InvalidStartEndTimeException Thrown if end is before start.
      * @throws DuplicateShiftTimeException Thrown if the production already contains a shift with the given [startTime] and [endTime].
+     * @throws
      */
-    fun createShift(productionUuid: UUID, startTime: String, endTime: String): Shift {
+    fun createShift(productionUuid: UUID, start: Instant, end: Instant): Shift {
         val production = productionRepository.findByUuid(productionUuid)
             ?: throw NotFoundException("No production with uuid [$productionUuid] was found")
-        val startLt = LocalTime.parse(startTime)
-        val endLt = LocalTime.parse(endTime)
-        validateNewShift(production.shifts, startLt, endLt)
-        val newShift = ShiftEntity(
-            startTime = startLt,
-            endTime = endLt,
-            production = production
-        )
+        validateNewShift(production.shifts, start, end)
+        val newShift = ShiftEntity(startTime = start, endTime = end, production = production)
         return shiftRepository.save(newShift)
             .let(transformer::toBo)
     }
 
-    private fun validateNewShift(existingShifts: List<ShiftEntity>, start: LocalTime, end: LocalTime) {
+    private fun validateNewShift(existingShifts: List<ShiftEntity>, start: Instant, end: Instant) {
         if (!start.isBefore(end)) {
             throw InvalidStartEndTimeException("Start time must be before end time")
         }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalTime.parse
+import java.time.Instant
 import java.util.*
 
 @Suppress("unchecked_cast")
@@ -24,12 +24,27 @@ class ShiftsDataLoaderTest {
 
     val shifts = listOf(
         listOf(
-            Shift(id = 1, uuid = UUID.randomUUID(), startTime = parse("14:00"), endTime = parse("16:00")),
-            Shift(id = 2, uuid = UUID.randomUUID(), startTime = parse("16:00"), endTime = parse("18:00"))
+            Shift(
+                id = 1,
+                uuid = UUID.randomUUID(),
+                startTime = Instant.parse("2021-01-01T14:00:00Z"),
+                endTime = Instant.parse("2021-01-01T16:00:00Z")
+            ),
+            Shift(
+                id = 2,
+                uuid = UUID.randomUUID(),
+                startTime = Instant.parse("2021-01-01T16:00:00Z"),
+                endTime = Instant.parse("2021-01-01T18:00:00Z")
+            )
         ),
         emptyList(),
         listOf(
-            Shift(id = 3, uuid = UUID.randomUUID(), startTime = parse("12:00"), endTime = parse("13:00"))
+            Shift(
+                id = 3,
+                uuid = UUID.randomUUID(),
+                startTime = Instant.parse("2021-01-01T12:00:00Z"),
+                endTime = Instant.parse("2021-01-01T13:00:00Z")
+            )
         )
     )
     private val shiftsDto = listOf(

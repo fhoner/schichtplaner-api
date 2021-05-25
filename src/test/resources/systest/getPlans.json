@@ -8,8 +8,8 @@
                         "name": "Einlass",
                         "shifts": [
                             {
-                                "startTime": "19:00",
-                                "endTime": "20:15"
+                                "startTime": "2021-01-01T19:00:00Z",
+                                "endTime": "2021-01-01T20:15:00Z"
                             }
                         ]
                     },
@@ -26,16 +26,16 @@
                         "name": "Getränke",
                         "shifts": [
                             {
-                                "startTime": "09:30",
-                                "endTime": "14:00"
+                                "startTime": "2021-01-01T09:30:00Z",
+                                "endTime": "2021-01-01T14:00:00Z"
                             },
                             {
-                                "startTime": "14:00",
-                                "endTime": "18:30"
+                                "startTime": "2021-01-01T14:00:00Z",
+                                "endTime": "2021-01-01T18:30:00Z"
                             },
                             {
-                                "startTime": "18:30",
-                                "endTime": "23:45"
+                                "startTime": "2021-01-01T18:30:00Z",
+                                "endTime": "2021-01-01T23:45:00Z"
                             }
                         ]
                     },
@@ -43,16 +43,16 @@
                         "name": "Pommes",
                         "shifts": [
                             {
-                                "startTime": "09:30",
-                                "endTime": "14:00"
+                                "startTime": "2021-01-01T09:30:00Z",
+                                "endTime": "2021-01-01T14:00:00Z"
                             },
                             {
-                                "startTime": "14:00",
-                                "endTime": "18:30"
+                                "startTime": "2021-01-01T14:00:00Z",
+                                "endTime": "2021-01-01T18:30:00Z"
                             },
                             {
-                                "startTime": "18:30",
-                                "endTime": "23:45"
+                                "startTime": "2021-01-01T18:30:00Z",
+                                "endTime": "2021-01-01T23:45:00Z"
                             }
                         ]
                     }

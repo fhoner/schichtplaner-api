@@ -6,6 +6,7 @@ import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import com.felixhoner.schichtplaner.api.graphql.dto.ShiftDto
 import com.felixhoner.schichtplaner.api.graphql.dto.TransformerDto
 import org.springframework.stereotype.Component
+import java.time.Instant.parse
 import java.util.*
 
 @Component
@@ -17,7 +18,7 @@ class ShiftMutation(
 
     @Authorized("ADMIN")
     fun createShift(productionUuid: String, startTime: String, endTime: String): ShiftDto =
-        shiftService.createShift(UUID.fromString(productionUuid), startTime, endTime)
+        shiftService.createShift(UUID.fromString(productionUuid), parse(startTime), parse(endTime))
             .let(transformerDto::toDto)
 
 }

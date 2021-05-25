@@ -25,6 +25,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-reactor-netty:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+    implementation("javax.xml.bind:jaxb-api:$jaxbApi")
     implementation("com.expediagroup:graphql-kotlin-spring-server:$graphqlKotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
@@ -50,6 +51,17 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
 }
 
+tasks.register("bootRunInsertTestData") {
+    group = "application"
+    description = "Runs the Spring Boot application and inserts some test data"
+    doFirst {
+        tasks.bootRun.configure {
+            systemProperty("spring.profiles.active", "testdata")
+        }
+    }
+    finalizedBy("bootRun")
+}
+
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
@@ -64,7 +76,6 @@ detekt {
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    // include("**/special/package/**") // only analyze a sub package inside src/main/kotlin
     exclude("**/TestData.kt") // but exclude our legacy internal package
 }
 

@@ -7,7 +7,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalTime.parse
+import java.time.Instant.parse
 
 @DatabaseTest
 class WorkerRepositoryTest {
@@ -25,10 +25,26 @@ class WorkerRepositoryTest {
         val mike = WorkerEntity(firstname = "Mike", lastname = "Eggert", email = "mike@eggert.de")
         cut.saveAll(listOf(max, sabine, mike))
 
-        val shift1 = ShiftEntity(startTime = parse("14:00"), endTime = parse("15:00"), workers = mutableListOf(max))
-        val shift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("15:00"), workers = mutableListOf(sabine))
-        val shift3 = ShiftEntity(startTime = parse("14:00"), endTime = parse("15:00"), workers = mutableListOf(sabine, max))
-        val shift4 = ShiftEntity(startTime = parse("14:00"), endTime = parse("15:00"), workers = mutableListOf())
+        val shift1 = ShiftEntity(
+            startTime = parse("2021-01-01T14:00:00Z"),
+            endTime = parse("2021-01-01T15:00:00Z"),
+            workers = mutableListOf(max)
+        )
+        val shift2 = ShiftEntity(
+            startTime = parse("2021-01-01T14:00:00Z"),
+            endTime = parse("2021-01-01T15:00:00Z"),
+            workers = mutableListOf(sabine)
+        )
+        val shift3 = ShiftEntity(
+            startTime = parse("2021-01-01T14:00:00Z"),
+            endTime = parse("2021-01-01T15:00:00Z"),
+            workers = mutableListOf(sabine, max)
+        )
+        val shift4 = ShiftEntity(
+            startTime = parse("2021-01-01T14:00:00Z"),
+            endTime = parse("2021-01-01T15:00:00Z"),
+            workers = mutableListOf()
+        )
         val shifts = listOf(shift1, shift2, shift3, shift4)
         shiftRepository.saveAll(shifts)
 

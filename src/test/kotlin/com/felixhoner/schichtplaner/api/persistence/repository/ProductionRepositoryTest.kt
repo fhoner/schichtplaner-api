@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalTime.parse
+import java.time.Instant
 
 @DatabaseTest
 class ProductionRepositoryTest {
@@ -55,10 +55,11 @@ class ProductionRepositoryTest {
 
         @BeforeEach
         fun insertShifts() {
-            val drinksShifts = listOf(ShiftEntity(startTime = parse("11:00"), endTime = parse("12:00")))
+            val drinksShifts =
+                listOf(ShiftEntity(startTime = Instant.parse("2021-01-01T11:00:00Z"), endTime = Instant.parse("2021-01-01T12:00:00Z")))
             val entranceShifts = listOf(
-                ShiftEntity(startTime = parse("14:00"), endTime = parse("15:00")),
-                ShiftEntity(startTime = parse("15:00"), endTime = parse("16:00"))
+                ShiftEntity(startTime = Instant.parse("2021-01-01T14:00:00Z"), endTime = Instant.parse("2021-01-01T15:00:00Z")),
+                ShiftEntity(startTime = Instant.parse("2021-01-01T15:00:00Z"), endTime = Instant.parse("2021-01-01T16:00:00Z"))
             )
             shiftRepository.saveAll(drinksShifts + entranceShifts)
 
@@ -73,12 +74,12 @@ class ProductionRepositoryTest {
             result shouldNotBe null
             result!!.shifts shouldHaveSize 2
             result.shifts[0].apply {
-                startTime shouldBe parse("14:00")
-                endTime shouldBe parse("15:00")
+                startTime shouldBe Instant.parse("2021-01-01T14:00:00Z")
+                endTime shouldBe Instant.parse("2021-01-01T15:00:00Z")
             }
             result.shifts[1].apply {
-                startTime shouldBe parse("15:00")
-                endTime shouldBe parse("16:00")
+                startTime shouldBe Instant.parse("2021-01-01T15:00:00Z")
+                endTime shouldBe Instant.parse("2021-01-01T16:00:00Z")
             }
         }
 

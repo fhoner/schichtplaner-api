@@ -16,7 +16,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.LocalTime.parse
+import java.time.Instant
 import java.util.*
 
 class TransformerBoTest {
@@ -60,14 +60,14 @@ class TransformerBoTest {
         val shiftEntity = ShiftEntity(
             id = 4711,
             uuid = uuid,
-            startTime = parse("14:00"),
-            endTime = parse("16:00"),
+            startTime = Instant.parse("2021-01-01T14:00:00Z"),
+            endTime = Instant.parse("2021-01-01T16:00:00Z"),
         )
         val shift = Shift(
             id = 4711,
             uuid = uuid,
-            startTime = parse("14:00"),
-            endTime = parse("16:00")
+            startTime = Instant.parse("2021-01-01T14:00:00Z"),
+            endTime = Instant.parse("2021-01-01T16:00:00Z")
         )
         cut.toBo(shiftEntity) shouldBe shift
     }
@@ -81,8 +81,8 @@ class TransformerBoTest {
             lastname = "Mustermann",
             email = "max@mustermann",
             shifts = mutableListOf(
-                ShiftEntity(id = 12, startTime = parse("14:00"), endTime = parse("15:00")),
-                ShiftEntity(id = 13, startTime = parse("15:00"), endTime = parse("16:00")),
+                ShiftEntity(id = 12, startTime = Instant.parse("2021-01-01T14:00:00Z"), endTime = Instant.parse("2021-01-01T15:00:00Z")),
+                ShiftEntity(id = 13, startTime = Instant.parse("2021-01-01T15:00:00Z"), endTime = Instant.parse("2021-01-01T16:00:00Z")),
             )
         )
         val worker = Worker(

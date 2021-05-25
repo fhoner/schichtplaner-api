@@ -11,7 +11,7 @@ import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.Table
-import java.time.LocalTime
+import java.time.Instant
 import java.util.*
 
 @Entity
@@ -23,10 +23,10 @@ data class ShiftEntity(
     val id: Long? = null,
 
     @NotNull
-    val startTime: LocalTime,
+    val startTime: Instant,
 
     @NotNull
-    val endTime: LocalTime,
+    val endTime: Instant,
 
     @ManyToOne(fetch = FetchType.LAZY)
     val production: ProductionEntity? = null,

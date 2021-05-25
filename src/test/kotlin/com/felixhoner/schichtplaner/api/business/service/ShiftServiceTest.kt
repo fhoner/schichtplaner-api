@@ -18,7 +18,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.LocalTime.parse
+import java.time.Instant.parse
 import java.util.*
 
 
@@ -90,29 +90,30 @@ class ShiftServiceTest {
         fun `should create shift if timeslot is not booked yet`() {
             val productionEntity = ProductionEntity(name = "Name", plan = plan, shifts = mutableListOf())
             val createdShift = ShiftEntity(
-                startTime = parse("14:00"),
-                endTime = parse("16:00"),
+                startTime = parse("2021-01-01T14:00:00Z"),
+                endTime = parse("2021-01-01T16:00:00Z"),
                 production = productionEntity
             )
             val savedShift = createdShift.copy(id = 4711)
             val createdShiftBo = Shift(
                 id = 4711,
                 uuid = createdShift.uuid,
-                startTime = parse("14:00"),
-                endTime = parse("16:00"),
+                startTime = parse("2021-01-01T14:00:00Z"),
+                endTime = parse("2021-01-01T16:00:00Z"),
             )
             val savedShiftSLot = slot<ShiftEntity>()
             every { productionRepository.findByUuid(any()) } returns productionEntity
             every { shiftRepository.save(capture(savedShiftSLot)) } returns savedShift
             every { transformer.toBo(any<ShiftEntity>()) } returns createdShiftBo
 
-            val result = cut.createShift(productionEntity.uuid, "14:00", "16:00")
+            val result =
+                cut.createShift(productionEntity.uuid, parse("2021-01-01T14:00:00Z"), parse("2021-01-01T16:00:00Z"))
             result shouldBe createdShiftBo
 
             savedShiftSLot.captured.apply {
                 production shouldBe productionEntity
-                startTime shouldBe parse("14:00")
-                endTime shouldBe parse("16:00")
+                startTime shouldBe parse("2021-01-01T14:00:00Z")
+                endTime shouldBe parse("2021-01-01T16:00:00Z")
             }
             verify {
                 productionRepository.findByUuid(productionEntity.uuid)
@@ -125,7 +126,7 @@ class ShiftServiceTest {
             val uuid = UUID.randomUUID()
             every { productionRepository.findByUuid(any()) } returns null
             val exception = shouldThrow<NotFoundException> {
-                cut.createShift(uuid, "14:00", "14:00")
+                cut.createShift(uuid, parse("2021-01-01T14:00:00Z"), parse("2021-01-01T14:00:00Z"))
             }
             exception.message shouldBe "No production with uuid [$uuid] was found"
         }
@@ -136,7 +137,7 @@ class ShiftServiceTest {
             every { productionRepository.findByUuid(any()) } returns productionEntity
 
             val exception = shouldThrow<InvalidStartEndTimeException> {
-                cut.createShift(productionEntity.uuid, "14:00", "14:00")
+                cut.createShift(productionEntity.uuid, parse("2021-01-01T14:00:00Z"), parse("2021-01-01T14:00:00Z"))
             }
             exception.message shouldBe "Start time must be before end time"
         }
@@ -148,17 +149,18 @@ class ShiftServiceTest {
                 plan = plan,
                 shifts = mutableListOf(
                     ShiftEntity(
-                        startTime = parse("14:00"),
-                        endTime = parse("16:00"),
+                        startTime = parse("2021-01-01T14:00:00Z"),
+                        endTime = parse("2021-01-01T16:00:00Z"),
                     )
                 )
             )
             every { productionRepository.findByUuid(any()) } returns productionEntity
 
             val exception = shouldThrow<DuplicateShiftTimeException> {
-                cut.createShift(productionEntity.uuid, "14:00", "16:00")
+                cut.createShift(productionEntity.uuid, parse("2021-01-01T14:00:00Z"), parse("2021-01-01T16:00:00Z"))
             }
-            exception.message shouldBe "The production already contains a shift with [startTime, endTime] = [14:00, 16:00]"
+            exception.message shouldBe
+                    "The production already contains a shift with [startTime, endTime] = [2021-01-01T14:00:00Z, 2021-01-01T16:00:00Z]"
 
             verify { shiftRepository.save(any()) wasNot called }
         }

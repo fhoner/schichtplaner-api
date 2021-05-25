@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
-import java.time.LocalTime.parse
+import java.time.Instant
 
 @Component
 @Profile("testdata")
@@ -57,25 +57,76 @@ class TestData(
         val kabarettEntrance = ProductionEntity(name = "Einlass", plan = kabarett)
         productionRepository.saveAll(listOf(konzertEntrance, konzertDrinks, vtfDrinks, vtfFries, vtfBeer, kabarettEntrance))
 
-        val konzertEntranceShift = ShiftEntity(startTime = parse("19:00"), endTime = parse("20:30"), production = konzertEntrance)
-            .apply { workers.add(gretaLiebert) }
-        val vtfDrinksShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfDrinks)
-            .apply { workers.add(mariusReich) }
-        val vtfDrinksShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfDrinks)
-            .apply { workers.add(mikeEggert) }
-        val vtfDrinksShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfDrinks)
-            .apply { workers.addAll(listOf(mikeEggert, edeltraudBaar)) }
-        val vtfFriesShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfFries)
-        val vtfFriesShift2 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfFries)
-            .apply { workers.addAll(listOf(robinSigmund, sabineHarst)) }
-        val vtfFriesShift3 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfFries)
-        val vtfBeerShift1 = ShiftEntity(startTime = parse("09:30"), endTime = parse("14:00"), production = vtfBeer)
-        val vtfBeerShift2 = ShiftEntity(startTime = parse("11:00"), endTime = parse("15:30"), production = vtfBeer)
-        val vtfBeerShift3 = ShiftEntity(startTime = parse("12:00"), endTime = parse("16:30"), production = vtfBeer)
-        val vtfBeerShift4 = ShiftEntity(startTime = parse("14:00"), endTime = parse("18:30"), production = vtfBeer)
-        val vtfBeerShift5 = ShiftEntity(startTime = parse("15:30"), endTime = parse("20:00"), production = vtfBeer)
-        val vtfBeerShift6 = ShiftEntity(startTime = parse("16:30"), endTime = parse("21:00"), production = vtfBeer)
-        val vtfBeerShift7 = ShiftEntity(startTime = parse("18:30"), endTime = parse("23:45"), production = vtfBeer)
+        val konzertEntranceShift = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T19:00:00Z"),
+            endTime = Instant.parse("2021-01-01T20:30:00Z"),
+            production = konzertEntrance
+        ).apply { workers.add(gretaLiebert) }
+        val vtfDrinksShift1 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T09:30:00Z"),
+            endTime = Instant.parse("2021-01-01T14:00:00Z"),
+            production = vtfDrinks
+        ).apply { workers.add(mariusReich) }
+        val vtfDrinksShift2 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T14:00:00Z"),
+            endTime = Instant.parse("2021-01-01T18:30:00Z"),
+            production = vtfDrinks
+        ).apply { workers.add(mikeEggert) }
+        val vtfDrinksShift3 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T18:30:00Z"),
+            endTime = Instant.parse("2021-01-01T23:45:00Z"),
+            production = vtfDrinks
+        ).apply { workers.addAll(listOf(mikeEggert, edeltraudBaar)) }
+        val vtfFriesShift1 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T09:30:00Z"),
+            endTime = Instant.parse("2021-01-01T14:00:00Z"),
+            production = vtfFries
+        )
+        val vtfFriesShift2 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T14:00:00Z"),
+            endTime = Instant.parse("2021-01-01T18:30:00Z"),
+            production = vtfFries
+        ).apply { workers.addAll(listOf(robinSigmund, sabineHarst)) }
+        val vtfFriesShift3 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T18:30:00Z"),
+            endTime = Instant.parse("2021-01-01T23:45:00Z"),
+            production = vtfFries
+        )
+        val vtfBeerShift1 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T09:30:00Z"),
+            endTime = Instant.parse("2021-01-01T14:00:00Z"),
+            production = vtfBeer
+        )
+        val vtfBeerShift2 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T11:00:00Z"),
+            endTime = Instant.parse("2021-01-01T15:30:00Z"),
+            production = vtfBeer
+        )
+        val vtfBeerShift3 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T12:00:00Z"),
+            endTime = Instant.parse("2021-01-01T16:30:00Z"),
+            production = vtfBeer
+        )
+        val vtfBeerShift4 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T14:00:00Z"),
+            endTime = Instant.parse("2021-01-01T18:30:00Z"),
+            production = vtfBeer
+        )
+        val vtfBeerShift5 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T15:30:00Z"),
+            endTime = Instant.parse("2021-01-01T20:00:00Z"),
+            production = vtfBeer
+        )
+        val vtfBeerShift6 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T16:30:00Z"),
+            endTime = Instant.parse("2021-01-01T21:00:00Z"),
+            production = vtfBeer
+        )
+        val vtfBeerShift7 = ShiftEntity(
+            startTime = Instant.parse("2021-01-01T18:30:00Z"),
+            endTime = Instant.parse("2021-01-01T23:45:00Z"),
+            production = vtfBeer
+        )
         shiftRepository.saveAll(
             listOf(
                 konzertEntranceShift,
