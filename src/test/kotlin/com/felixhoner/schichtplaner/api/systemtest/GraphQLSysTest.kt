@@ -35,7 +35,7 @@ class GraphQLSysTest : BaseSystemTest() {
             .replace("\t", " ")
             .replace(" +".toRegex(), " ")
 
-        val (accessToken, _) = super.doSuccessfulLogin()
+        val (accessToken, _) = super.doSuccessfulLogin().block()!!
 
         testClient.post()
             .uri(GRAPHQL_ENDPOINT)
@@ -67,7 +67,7 @@ class GraphQLSysTest : BaseSystemTest() {
             )
         )
 
-        val (accessToken, _) = super.doSuccessfulLogin()
+        val (accessToken, _) = super.doSuccessfulLogin().block()!!
 
         testClient.post()
             .uri(GRAPHQL_ENDPOINT)
