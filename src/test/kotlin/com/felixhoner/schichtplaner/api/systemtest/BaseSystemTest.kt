@@ -66,7 +66,7 @@ class BaseSystemTest {
             .build()
     }
 
-    protected fun doSuccessfulLogin(): Mono<Pair<String, String>> {
+    fun doSuccessfulLogin(): Mono<Pair<String, String>> {
         return webClient
             .post()
             .uri("/auth/login")
@@ -81,9 +81,9 @@ class BaseSystemTest {
             }
     }
 
-    protected fun fileContents(filename: String): String = BaseSystemTest::class.java.getResource("/systest/$filename.json")!!.readText()
+    fun fileContents(filename: String): String = BaseSystemTest::class.java.getResource("/systest/$filename.json")!!.readText()
 
-    protected fun prepareData() {
+    fun prepareData() {
         val konzert = PlanEntity(name = "Konzert 2021")
         val vtf = PlanEntity(name = "Vatertagsfest 2021")
         val kabarett = PlanEntity(name = "Kabarett 2021")
@@ -115,7 +115,7 @@ class BaseSystemTest {
         userRepository.save(felix)
     }
 
-    protected fun clearData() {
+    fun clearData() {
         this.shiftRepository.deleteAll()
         this.productionRepository.deleteAll()
         this.planRepository.deleteAll()

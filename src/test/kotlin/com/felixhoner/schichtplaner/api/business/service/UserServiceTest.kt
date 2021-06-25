@@ -11,6 +11,7 @@ import com.felixhoner.schichtplaner.api.persistence.repository.UserRepository
 import com.felixhoner.schichtplaner.api.security.JwtSigner
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
+import io.jsonwebtoken.security.InvalidKeyException
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -161,7 +162,7 @@ class UserServiceTest {
 
         @Test
         fun `should fail if token is invalid`() {
-            every { jwtSigner.validateJwt(any()) } throws Exception()
+            every { jwtSigner.validateJwt(any()) } throws InvalidKeyException("")
 
             val result = cut.refreshToken("acbxyz", TokenType.ACCESS)
             StepVerifier.create(result)

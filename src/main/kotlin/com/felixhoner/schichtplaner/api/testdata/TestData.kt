@@ -1,4 +1,4 @@
-package com.felixhoner.schichtplaner.api
+package com.felixhoner.schichtplaner.api.testdata
 
 import com.felixhoner.schichtplaner.api.persistence.entity.PlanEntity
 import com.felixhoner.schichtplaner.api.persistence.entity.ProductionEntity
@@ -95,12 +95,12 @@ class TestData(
             password = passwordEncoder.encode("siegfried"),
             role = UserRole.WRITER
         )
-        val mmüller = UserEntity(
+        val mmueller = UserEntity(
             email = "manfred.müller@mail.de",
             password = passwordEncoder.encode("manfred"),
             role = UserRole.READER
         )
-        userRepository.saveAll(listOf(fhoner, ssicher, mmüller))
+        userRepository.saveAll(listOf(fhoner, ssicher, mmueller))
     }
 
 }

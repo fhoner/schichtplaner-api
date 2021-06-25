@@ -3,8 +3,8 @@ package com.felixhoner.schichtplaner.api.graphql.execution
 import com.expediagroup.graphql.generator.execution.FunctionDataFetcher
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.schema.DataFetchingEnvironment
-import reactor.core.publisher.Mono
 import kotlin.reflect.KFunction
+import reactor.core.publisher.Mono
 
 class ReactiveFunctionDataFetcher(target: Any?, fn: KFunction<*>, objectMapper: ObjectMapper) :
     FunctionDataFetcher(target, fn, objectMapper) {

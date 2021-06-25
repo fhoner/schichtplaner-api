@@ -8,6 +8,8 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
+    id("io.gitlab.arturbosch.detekt") version detektVersion
+    id("org.owasp.dependencycheck") version owaspDependencyCheckVersion
 }
 
 group = "com.felixhoner.schichtplaner.api"
@@ -48,10 +50,28 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
 }
 
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+
+    reports {
+        html.enabled = true // observe findings in your browser with structure and code snippets
+        xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+        txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.enabled = true // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+    }
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    // include("**/special/package/**") // only analyze a sub package inside src/main/kotlin
+    exclude("**/TestData.kt") // but exclude our legacy internal package
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "15"
+        jvmTarget = JavaVersion.VERSION_15.toString()
     }
 }
 

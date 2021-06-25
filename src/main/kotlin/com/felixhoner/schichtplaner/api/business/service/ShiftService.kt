@@ -40,20 +40,15 @@ class ShiftService(
      * @param startTime Start time of the shift.
      * @param endTime End time of the shift.
      * @throws NotFoundException Thrown if no production with [productionUuid] exists.
+     * @throws InvalidStartEndTimeException Thrown if end is before start.
      * @throws DuplicateShiftTimeException Thrown if the production already contains a shift with the given [startTime] and [endTime].
-     * @throws
      */
     fun createShift(productionUuid: UUID, startTime: String, endTime: String): Shift {
         val production = productionRepository.findByUuid(productionUuid)
             ?: throw NotFoundException("No production with uuid [$productionUuid] was found")
         val startLt = LocalTime.parse(startTime)
         val endLt = LocalTime.parse(endTime)
-        if (!startLt.isBefore(endLt)) {
-            throw InvalidStartEndTimeException("Start time must be before end time")
-        }
-        if (production.shifts.any { it.startTime == startLt && it.endTime == endLt }) {
-            throw DuplicateShiftTimeException("The production already contains a shift with [startTime, endTime] = [$startTime, $endTime]")
-        }
+        validateNewShift(production.shifts, startLt, endLt)
         val newShift = ShiftEntity(
             startTime = startLt,
             endTime = endLt,
@@ -61,6 +56,15 @@ class ShiftService(
         )
         return shiftRepository.save(newShift)
             .let(transformer::toBo)
+    }
+
+    private fun validateNewShift(existingShifts: List<ShiftEntity>, start: LocalTime, end: LocalTime) {
+        if (!start.isBefore(end)) {
+            throw InvalidStartEndTimeException("Start time must be before end time")
+        }
+        if (existingShifts.any { it.startTime == start && it.endTime == end }) {
+            throw DuplicateShiftTimeException("The production already contains a shift with [startTime, endTime] = [$start, $end]")
+        }
     }
 
 }

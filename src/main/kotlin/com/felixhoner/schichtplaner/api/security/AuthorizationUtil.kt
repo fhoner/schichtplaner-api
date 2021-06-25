@@ -3,10 +3,10 @@ package com.felixhoner.schichtplaner.api.security
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import graphql.execution.MergedField
 import graphql.language.Field
-import org.springframework.security.core.context.SecurityContext
-import reactor.core.publisher.Mono
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
+import org.springframework.security.core.context.SecurityContext
+import reactor.core.publisher.Mono
 
 object AuthorizationUtil {
 

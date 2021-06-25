@@ -10,7 +10,6 @@ import graphql.execution.DataFetcherExceptionHandler
 import org.springframework.beans.factory.BeanFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 
@@ -22,11 +21,8 @@ class SchichtplanerBackend {
     fun objectMapper(): ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     @Bean
-    fun dataFetcherFactoryProvider(
-        objectMapper: ObjectMapper,
-        applicationContext: ApplicationContext,
-        beanFactory: BeanFactory
-    ) = CustomDataFetcherFactoryProvider(objectMapper, beanFactory)
+    fun dataFetcherFactoryProvider(objectMapper: ObjectMapper, beanFactory: BeanFactory) =
+        CustomDataFetcherFactoryProvider(objectMapper, beanFactory)
 
     @Bean
     fun springGraphQLContextFactory(): SpringGraphQLContextFactory<*> = ReactiveSecurityContextFactory()

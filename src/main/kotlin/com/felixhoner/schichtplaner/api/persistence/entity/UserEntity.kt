@@ -1,7 +1,6 @@
 package com.felixhoner.schichtplaner.api.persistence.entity
 
 import jakarta.validation.constraints.Email
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -10,6 +9,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
+import java.util.*
 
 /**
  * Roles are building on top of each other in a transitive manner.

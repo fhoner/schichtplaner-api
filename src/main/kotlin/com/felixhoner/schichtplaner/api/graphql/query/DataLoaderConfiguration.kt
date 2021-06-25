@@ -5,6 +5,7 @@ import com.felixhoner.schichtplaner.api.graphql.dataloader.SchichtplanerDataLoad
 import com.felixhoner.schichtplaner.api.graphql.dto.ProductionDto
 import com.felixhoner.schichtplaner.api.graphql.dto.ShiftDto
 import com.felixhoner.schichtplaner.api.graphql.dto.WorkerDto
+import com.felixhoner.schichtplaner.api.graphql.errorhandling.DataLoaderNotFoundException
 import org.dataloader.DataLoader
 import org.dataloader.DataLoaderRegistry
 import org.springframework.context.annotation.Bean
@@ -32,7 +33,7 @@ class DataLoaderConfiguration(
     private fun <T, V> getLoader(name: String) = this.registeredDataLoaders
         .find { it.name == name }
         ?.let { it.getInstance() as DataLoader<T, V> }
-        ?: throw RuntimeException(
+        ?: throw DataLoaderNotFoundException(
             "DataLoader with name [$name] was not registered as an implementation of [${SchichtplanerDataLoader::name}]"
         )
 

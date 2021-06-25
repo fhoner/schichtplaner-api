@@ -1,9 +1,18 @@
 package com.felixhoner.schichtplaner.api.persistence.entity
 
 import jakarta.validation.constraints.NotNull
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 import java.time.LocalTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 @Table(name = "shift")

@@ -1,0 +1,11 @@
+formatting:
+  MaximumLineLength:
+    maxLineLength: 140
+
+style:
+  MaxLineLength:
+    maxLineLength: 140
+
+performance:
+  SpreadOperator:
+    active: false

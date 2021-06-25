@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.felixhoner.schichtplaner.api.graphql.directive.Authorized
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetcherFactory
-import org.springframework.beans.factory.BeanFactory
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.findAnnotation
+import org.springframework.beans.factory.BeanFactory
 
 /**
  * Custom DataFetcherFactory to fetch data in our custom way.

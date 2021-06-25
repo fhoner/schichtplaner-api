@@ -1,4 +1,4 @@
-image: openjdk:11.0.9.1-jdk
+image: adoptopenjdk/openjdk15:alpine
 
 # DinD service is required for Testcontainers
 services:

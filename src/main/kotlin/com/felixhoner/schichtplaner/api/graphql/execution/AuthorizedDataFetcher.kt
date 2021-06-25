@@ -21,8 +21,7 @@ class AuthorizedDataFetcher(
         }
 
         val context: GraphQLSecurityContext? = environment.getContext()
-        val securityContext: Mono<SecurityContext> =
-            context?.securityContext ?: throw RuntimeException("SecurityContext not present")
+        val securityContext: Mono<SecurityContext> = context?.securityContext!!
         val accessCheck = checkRoles(securityContext)
 
         return accessCheck
@@ -51,7 +50,7 @@ class AuthorizedDataFetcher(
 
     private fun createResult(data: Any): DataFetcherResult<*> {
         return DataFetcherResult.newResult<Any>()
-            .data((data as? CompletableFuture<*>)?.get() ?: data) // FIXME: how to avoid
+            .data((data as? CompletableFuture<*>)?.get() ?: data)
             .build()
     }
 }

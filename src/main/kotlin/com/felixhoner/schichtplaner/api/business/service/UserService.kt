@@ -10,6 +10,8 @@ import com.felixhoner.schichtplaner.api.persistence.entity.UserEntity
 import com.felixhoner.schichtplaner.api.persistence.repository.UserRepository
 import com.felixhoner.schichtplaner.api.security.JwtSigner
 import com.felixhoner.schichtplaner.api.security.SchichtplanerUser
+import io.jsonwebtoken.security.InvalidKeyException
+import mu.KotlinLogging
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
@@ -26,6 +28,9 @@ class UserService(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val transformer: TransformerBo
 ) {
+
+    private val logger = KotlinLogging.logger {}
+
     fun login(username: String, password: String): Mono<Pair<String, String>> {
         val dbresult = userRepository.findByEmail(username)
         if (dbresult == null || !passwordEncoder.matches(password, dbresult.password)) {
@@ -50,20 +55,20 @@ class UserService(
 
     @Suppress("UNCHECKED_CAST")
     fun refreshToken(refreshToken: String, type: TokenType): Mono<String> = try {
-        jwtSigner.validateJwt(refreshToken)
-            .apply {
-                if (body["type"].toString() != "refresh") {
-                    throw InvalidRefreshTargetException("Expected token to be of type refresh but wasn't")
-                }
-            }
-            .let {
-                when (type) {
-                    TokenType.ACCESS -> jwtSigner.createAccessToken(it.body.subject, it.body["roles"] as List<String>)
-                    TokenType.REFRESH -> jwtSigner.createRefreshToken(it.body.subject, it.body["roles"] as List<String>)
-                }
-            }
-            .let { Mono.just(it) }
-    } catch (ex: Exception) {
+        val jws = jwtSigner.validateJwt(refreshToken)
+        if (jws.body["type"].toString() != "refresh") {
+            throw InvalidRefreshTargetException("Expected token to be of type refresh but wasn't")
+        } else {
+            when (type) {
+                TokenType.ACCESS -> jwtSigner.createAccessToken(jws.body.subject, jws.body["roles"] as List<String>)
+                TokenType.REFRESH -> jwtSigner.createRefreshToken(jws.body.subject, jws.body["roles"] as List<String>)
+            }.let { Mono.just(it) }
+        }
+    } catch (ex: InvalidRefreshTargetException) {
+        logger.info { ex }
+        Mono.error(InvalidTokenException())
+    } catch (ex: InvalidKeyException) {
+        logger.info { ex }
         Mono.error(InvalidTokenException())
     }
 
