@@ -17,7 +17,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 class TransformerBoTest {
     private val cut = TransformerBo()

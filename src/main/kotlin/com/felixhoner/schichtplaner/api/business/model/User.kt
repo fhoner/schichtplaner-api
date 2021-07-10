@@ -1,7 +1,7 @@
 package com.felixhoner.schichtplaner.api.business.model
 
 import com.felixhoner.schichtplaner.api.persistence.entity.UserRole
-import java.util.*
+import java.util.UUID
 
 data class User(
     val id: Long,

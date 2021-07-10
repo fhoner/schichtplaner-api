@@ -8,7 +8,7 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class PlanServiceTest {
 

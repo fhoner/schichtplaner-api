@@ -5,7 +5,7 @@ import com.felixhoner.schichtplaner.api.GRAPHQL_MEDIA_TYPE
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType.APPLICATION_JSON
-import java.util.*
+import java.util.UUID
 
 class GraphQLSysTest : BaseSystemTest() {
 

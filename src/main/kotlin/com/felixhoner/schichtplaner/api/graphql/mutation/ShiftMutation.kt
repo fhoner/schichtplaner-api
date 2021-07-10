@@ -7,7 +7,7 @@ import com.felixhoner.schichtplaner.api.graphql.dto.ShiftDto
 import com.felixhoner.schichtplaner.api.graphql.dto.TransformerDto
 import org.springframework.stereotype.Component
 import java.time.Instant.parse
-import java.util.*
+import java.util.UUID
 
 @Component
 @Suppress("unused")

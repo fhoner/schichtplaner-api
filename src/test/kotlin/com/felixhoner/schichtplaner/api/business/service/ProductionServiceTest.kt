@@ -9,7 +9,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class ProductionServiceTest {
 

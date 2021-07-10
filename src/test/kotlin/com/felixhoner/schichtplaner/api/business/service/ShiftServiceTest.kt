@@ -19,7 +19,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.time.Instant.parse
-import java.util.*
+import java.util.UUID
 
 
 class ShiftServiceTest {

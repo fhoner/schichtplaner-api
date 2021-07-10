@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
-import java.util.*
+import java.util.UUID
 
 /**
  * Roles are building on top of each other in a transitive manner.

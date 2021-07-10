@@ -1,6 +1,6 @@
 package com.felixhoner.schichtplaner.api.business.model
 
-import java.util.*
+import java.util.UUID
 
 data class Production(
     val id: Long,

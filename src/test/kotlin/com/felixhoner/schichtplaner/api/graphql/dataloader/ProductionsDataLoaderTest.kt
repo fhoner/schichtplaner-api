@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.dataloader.DataLoader
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 @Suppress("unchecked_cast")
 class ProductionsDataLoaderTest {

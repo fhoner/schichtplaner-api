@@ -1,7 +1,7 @@
 package com.felixhoner.schichtplaner.api.business.model
 
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 data class Shift(
     val id: Long,

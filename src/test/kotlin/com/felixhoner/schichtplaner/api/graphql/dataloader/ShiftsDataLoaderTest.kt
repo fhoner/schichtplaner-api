@@ -14,7 +14,7 @@ import org.dataloader.DataLoader
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Suppress("unchecked_cast")
 class ShiftsDataLoaderTest {
